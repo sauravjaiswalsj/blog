@@ -34,15 +34,6 @@ const config: Config = {
     sessionDuration: process.env.SESSION_DURATION || '86400000',
   },
 
-  // Debug: Log environment variables during build
-  ...((() => {
-    console.log('🔐 Build-time Environment Check:', {
-      NOTES_PASSWORD: process.env.NOTES_PASSWORD ? '[SET]' : '[NOT SET]',
-      AUTH_TITLE: process.env.AUTH_TITLE || '[DEFAULT]',
-    });
-    return {};
-  })()),
-
   onBrokenLinks: 'throw',
 
   // Even if you don't use internationalization, you can use this field to set

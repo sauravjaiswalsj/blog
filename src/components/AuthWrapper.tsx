@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AuthWrapper.module.css';
-import { getAuthConfig } from '../config/auth';
+import { useAuthConfig } from '../config/auth';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -11,63 +11,58 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-  const [config, setConfig] = useState(getAuthConfig());
+
+  // Get configuration from Docusaurus using the proper hook
+  const config = useAuthConfig();
 
   useEffect(() => {
-    // Update config when component mounts (in browser)
-    setConfig(getAuthConfig());
-    
     // Check if user is already authenticated
     const checkAuth = () => {
       try {
-        const currentConfig = getAuthConfig();
-        const session = localStorage.getItem(currentConfig.sessionKey);
+        const session = localStorage.getItem(config.sessionKey);
         if (session) {
           const { timestamp, authenticated } = JSON.parse(session);
           const now = Date.now();
           
           // Check if session is still valid
-          if (authenticated && (now - timestamp) < currentConfig.sessionDuration) {
+          if (authenticated && (now - timestamp) < config.sessionDuration) {
             setIsAuthenticated(true);
           } else {
             // Session expired, clear it
-            localStorage.removeItem(currentConfig.sessionKey);
+            localStorage.removeItem(config.sessionKey);
           }
         }
       } catch (error) {
         console.error('Auth check error:', error);
-        const currentConfig = getAuthConfig();
-        localStorage.removeItem(currentConfig.sessionKey);
+        localStorage.removeItem(config.sessionKey);
       }
       setLoading(false);
     };
 
     checkAuth();
-  }, []);
+  }, [config]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    const currentConfig = getAuthConfig();
-    if (password === currentConfig.password) {
+    if (password === config.password) {
       // Store authentication in localStorage with timestamp
       const session = {
         authenticated: true,
         timestamp: Date.now()
       };
-      localStorage.setItem(currentConfig.sessionKey, JSON.stringify(session));
+      localStorage.setItem(config.sessionKey, JSON.stringify(session));
       setIsAuthenticated(true);
       setPassword('');
     } else {
-      setError(currentConfig.ui.errorMessage);
+      setError(config.ui.errorMessage);
       setPassword('');
     }
   };
 
   const handleLogout = () => {
-    const currentConfig = getAuthConfig();
-    localStorage.removeItem(currentConfig.sessionKey);
+    localStorage.removeItem(config.sessionKey);
     setIsAuthenticated(false);
     setPassword('');
   };
