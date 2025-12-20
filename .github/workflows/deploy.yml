@@ -1,0 +1,137 @@
+name: Deploy LaTeX Notes
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  convert-and-build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Install Pandoc
+      run: |
+        sudo apt-get update
+        sudo apt-get install pandoc -y
+        pandoc --version
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Make conversion script executable
+      run: chmod +x scripts/tex-to-md.sh
+    
+    - name: Convert LaTeX files to Markdown
+      run: |
+        echo "Converting LaTeX files..."
+        ./scripts/tex-to-md.sh
+        echo "Conversion complete!"
+    
+    - name: Generate dynamic sidebar
+      run: |
+        echo "Generating sidebar..."
+        npm run generate-sidebar
+        echo "Sidebar generated!"
+    
+    - name: Check for changes in converted files
+      id: check-changes
+      run: |
+        if git diff --quiet docs/ sidebars.ts; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Commit converted Markdown files
+      if: steps.check-changes.outputs.changes == 'true' && github.event_name == 'push'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add docs/ sidebars.ts
+        git commit -m "🤖 Auto-convert LaTeX to Markdown and update sidebar [skip ci]" || exit 0
+        git push
+    
+    - name: Build Docusaurus site
+      env:
+        NOTES_PASSWORD: ${{ secrets.NOTES_PASSWORD }}
+        SESSION_DURATION: ${{ vars.SESSION_DURATION || '86400000' }}
+        AUTH_TITLE: ${{ vars.AUTH_TITLE || '🔒 Protected Notes' }}
+        AUTH_SUBTITLE: ${{ vars.AUTH_SUBTITLE || 'Please enter the password to access the notes section.' }}
+      run: |
+        echo "Building Docusaurus site..."
+        npm run build
+        echo "Build complete!"
+    
+    - name: Setup Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/configure-pages@v4
+    
+    - name: Upload to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./build
+    
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+  # Job for pull requests - just build and test
+  test-build:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install Pandoc
+      run: sudo apt-get install pandoc -y
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Convert LaTeX and test build
+      env:
+        NOTES_PASSWORD: ${{ secrets.NOTES_PASSWORD }}
+      run: |
+        chmod +x scripts/tex-to-md.sh
+        ./scripts/tex-to-md.sh
+        npm run generate-sidebar
+        npm run build
+    
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '✅ LaTeX conversion and build test passed! Ready to merge.'
+          })
