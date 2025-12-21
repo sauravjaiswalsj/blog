@@ -11,17 +11,23 @@ import styles from './index.module.css';
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <Heading as="h1" className="hero__title">
+    <header className={clsx(styles.heroBanner)}>
+      <div className={styles.heroBg} />
+      <div className={styles.heroGrid} />
+      <div className={clsx('container', styles.heroInner)}>
+        <Heading as="h1" className={styles.heroTitle}>
           {siteConfig.title}
         </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
+        <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
+        <div className={styles.ctaGroup}>
+          <Link className={clsx('button button--primary button--lg', styles.cta)} to="/docs/intro">
+            Explore Notes
+          </Link>
+          <Link className={clsx('button button--secondary button--lg', styles.cta)} to="/blog">
+            Read Blog
+          </Link>
+          <Link className={clsx('button button--outline button--lg', styles.cta)} to="https://github.com/sauravjaiswalsj/">
+            GitHub
           </Link>
         </div>
       </div>

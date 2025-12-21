@@ -18,12 +18,9 @@ Comprehensive coverage of fundamental data structures and algorithms including:
 - **Trees** - Binary trees, BST, balanced trees, traversals
 - **Graphs** - Representations, traversals, shortest paths, MST
 
-### Mathematics
+### Mathematics 6.120
 Mathematical concepts, proofs, and problem-solving techniques covering:
-- Discrete Mathematics
-- Linear Algebra
-- Calculus
-- Statistics and Probability
+- [Proofs](maths/6.120J/proofs.md) 
 
 ### Java
 Java programming concepts, syntax, and advanced topics:

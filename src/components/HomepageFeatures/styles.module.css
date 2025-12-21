@@ -5,7 +5,48 @@
   width: 100%;
 }
 
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 16px;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.6));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(6px);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.iconWrap {
+  display: grid;
+  place-items: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  background: radial-gradient(160px 80px at 50% 0%, rgba(37, 194, 160, 0.16), transparent);
+  margin-bottom: 0.75rem;
+}
+
 .featureSvg {
-  height: 200px;
-  width: 200px;
+  height: 120px;
+  width: 120px;
+}
+
+.cardBody {
+  text-align: center;
+  padding: 0 0.75rem;
+}
+
+.cardTitle {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.cardText {
+  margin: 0;
+  opacity: 0.85;
 }

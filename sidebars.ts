@@ -23,7 +23,15 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
-        "maths/calculus"
+        {
+          "type": "category",
+          "label": "6.120J",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "maths/6.120J/proofs"
+          ]
+        }
       ]
     },
     {

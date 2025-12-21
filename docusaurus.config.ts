@@ -6,7 +6,7 @@ import 'dotenv/config';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'My Notes',
+  title: 'Rise Notes',
   tagline: 'Subject-wise Technical Documentation',
   favicon: 'img/favicon.ico',
 
@@ -16,14 +16,14 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-username.github.io',
+  url: 'https://notesj.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'your-username', // Usually your GitHub org/user name.
+  organizationName: 'Saurav Jaiswal', // Usually your GitHub org/user name.
   projectName: 'notes', // Usually your repo name.
 
   // Custom fields for runtime configuration using environment variables
@@ -110,7 +110,7 @@ const config: Config = {
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/sauravjaiswalsj/',
           label: 'GitHub',
           position: 'right',
         },
@@ -132,16 +132,16 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'Linkedin',
+              href: 'https://www.linkedin.com/in/sauravjaiswalsj/',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'Website',
+              href: 'https://notesj.vercel.app/',
             },
             {
               label: 'X',
-              href: 'https://x.com/docusaurus',
+              href: 'https://x.com/',
             },
           ],
         },
@@ -154,12 +154,12 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/sauravjaiswalsj/',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} FyndCare, Inc.`,
     },
     prism: {
       theme: prismThemes.github,
