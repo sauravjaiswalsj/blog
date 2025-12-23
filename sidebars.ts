@@ -12,6 +12,15 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        {
+          "type": "category",
+          "label": "Hashing",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "dsa/Hashing/leetcode14"
+          ]
+        },
         "dsa/arrays",
         "dsa/graphs",
         "dsa/trees"
