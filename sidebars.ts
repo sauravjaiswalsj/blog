@@ -45,11 +45,53 @@ const sidebars: SidebarsConfig = {
     },
     {
       "type": "category",
+      "label": "Java Programming",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "java/Spring"
+      ]
+    },
+    {
+      "type": "category",
       "label": "System Design",
       "collapsible": true,
       "collapsed": false,
       "items": [
+        "systems/LogStore",
         "systems/overview"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "OS Storage",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "OS-Storage/Page-cache",
+        "OS-Storage/Replication"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Projects",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "LogStores",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Projects/LogStores/Background",
+            "Projects/LogStores/Design",
+            "Projects/LogStores/Log",
+            "Projects/LogStores/LogStore",
+            "Projects/LogStores/Revisit",
+            "Projects/LogStores/Work"
+          ]
+        }
       ]
     },
     {
