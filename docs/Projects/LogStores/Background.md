@@ -1,4 +1,6 @@
 # Log Store
+## Fsync
+fsync() is a system call that forces data from the operating system's memory buffers to be physically written to permanent disk storage, ensuring data durability, but it's slow because it bypasses OS caching for immediate, guaranteed write completion, forcing a wait for the slow physical disk to confirm the write, creating a performance bottleneck, especially with frequent calls. It's crucial for databases like PostgreSQL or MongoDB to prevent data loss on crashes but significantly impacts speed compared to just letting the OS handle writes late.
 
 ## Kafka's Scalability
 How can Kafka do millions of writes per second without locking, even with many producers?
