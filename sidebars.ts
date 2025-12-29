@@ -38,7 +38,8 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
-            "maths/6.120J/proofs"
+            "maths/6.120J/proofs",
+            "maths/6.120J/Set"
           ]
         }
       ]
@@ -58,6 +59,7 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        "systems/Latency vs Throughput",
         "systems/LogStore",
         "systems/overview"
       ]
@@ -68,6 +70,7 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        "OS-Storage/Fsync",
         "OS-Storage/Page-cache",
         "OS-Storage/Replication"
       ]
@@ -90,6 +93,25 @@ const sidebars: SidebarsConfig = {
             "Projects/LogStores/LogStore",
             "Projects/LogStores/Revisit",
             "Projects/LogStores/Work"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Warwick",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "DA CS910",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Warwick/DA-CS910/LossFunction",
+            "Warwick/DA-CS910/Slide1",
+            "Warwick/DA-CS910/Slide2"
           ]
         }
       ]
