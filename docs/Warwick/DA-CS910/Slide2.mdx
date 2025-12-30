@@ -14,7 +14,7 @@
 
 ### Supervised learning
 
-- Given input $(X)$ and output labels $(Y)$, learn a mapping $(f: \mathcal{X} \to \mathcal{Y})$.
+- Given input (X) and output labels (Y), learn a mapping f: X -> Y
 - **Classification**: output is discrete (classes). Example:  
   - Inputs: images of digits; outputs: labels 0–9.
 - **Regression**: output is continuous (numbers). Example:  
@@ -22,9 +22,9 @@
 
 ### Unsupervised learning
 
-- Given inputs $(X)$ only, learn structure/functions without labels.
-- **Clustering**: group similar items; model $(f: X \to \{1, \dots, K\})$ where $(K)$ is also unknown.
-- **Dimensionality reduction**: map high‑dimensional data (e.g. images) to low‑dimensional coordinates $(F(\text{image}) = (x, y))$ that capture main variability (e.g. pose, expression).
+- Given inputs (X) only, learn structure/functions without labels.
+- **Clustering**: group similar items; modelf: X -> {1, ..., K}, where K is the number of classes is also unknown.
+- **Dimensionality reduction**: map high‑dimensional data (e.g. images) to low‑dimensional coordinates (F({image}) = (x, y)) that capture main variability (e.g. pose, expression).
 
 ### Reinforcement learning
 
@@ -35,7 +35,7 @@
 ## 3. Experience: train, validation, test
 
 - Training data: used to fit the model parameters.
-- Validation data: used to tune hyperparameters (e.g. $(k)$ in k‑NN, learning rate) without biasing evaluation.
+- Validation data: used to tune hyperparameters (e.g. k in k‑NN, learning rate) without biasing evaluation.
 - Test data: unseen during training/tuning; used once to evaluate final generalisation.
 
 ### Overfitting and generalisation
@@ -74,8 +74,6 @@ Think of learning as “how wrong is my model?” quantified by a number.
 - Optimisation algorithms (e.g. gradient descent) try to change model parameters to **reduce** this average loss – like descending a hill until you reach the bottom.
 
 Without a loss function, the model has no numerical signal telling it which direction is “better” when adjusting parameters.
-
-
 
 ## What are outliers?
 
@@ -207,12 +205,29 @@ Overall loss is the average of $(L_i)$ across all examples.
 
 ### Intuition with cases
 
-- If $(y_i = 1)$: loss becomes $(L_i = -\log(\hat{y}_i))$.  
-  - If model says $(\hat{y}_i = 0.9)$: loss $(= -\log(0.9))$ (small).  
-  - If model says $(\hat{y}_i = 0.01)$: loss $(= -\log(0.01))$ (huge).  
-- If $(y_i = 0)$: loss becomes $(L_i = -\log(1 - \hat{y}_i))$.  
-  - If model says $(\hat{y}_i = 0.1)$: loss $(= -\log(0.9))$ (small).  
-  - If model says $(\hat{y}_i = 0.99)$: loss $(= -\log(0.01))$ (huge).
+* If `y_i = 1`, the loss becomes:
+
+  ```
+  L_i = -log(y_hat_i)
+  ```
+
+  * If the model predicts `y_hat_i = 0.9`
+    → loss = `-log(0.9)` (small)
+
+  * If the model predicts `y_hat_i = 0.01`
+    → loss = `-log(0.01)` (huge)
+
+* If `y_i = 0`, the loss becomes:
+
+  ```
+  L_i = -log(1 - y_hat_i)
+  ```
+
+  * If the model predicts `y_hat_i = 0.1`
+    → loss = `-log(0.9)` (small)
+
+  * If the model predicts `y_hat_i = 0.99`
+    → loss = `-log(0.01)` (huge)
 
 So:
 
