@@ -46,13 +46,14 @@ If predictions are close to reality, errors are small → MSE small. If predicti
 
 For \(n\) data points:  
 
-\[
+$$
 \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
-\]
+$$
 
-- \(y_i\): true/actual value for point \(i\)
-- \(\hat{y}_i\): predicted value for point \(i\)
-- \(y_i - \hat{y}_i\): error for point \(i\)  
+
+- $(y_i)$: true/actual value for point $(i)$
+- $(\hat{y}_i)$: predicted value for point $(i)$
+- $(y_i - \hat{y}_i)$: error for point $(i)$  
 - Squared and averaged.  
 
 ### 3.3 Simple numeric example
@@ -63,19 +64,19 @@ Suppose you predict a person’s weight 3 times (in kg):
 - Predicted: 58, 70, 69  
 
 Errors:  
-- Person 1: \(60 - 58 = 2\)  
-- Person 2: \(65 - 70 = -5\)  
-- Person 3: \(70 - 69 = 1\)  
+- Person 1: $(60 - 58 = 2)$  
+- Person 2: $(65 - 70 = -5)$  
+- Person 3: $(70 - 69 = 1)$  
 
 Square them:  
-- \(2^2 = 4\)  
-- \((-5)^2 = 25\)  
-- \(1^2 = 1\)  
+- $(2^2 = 4)$  
+- $((-5)^2 = 25)$  
+- $(1^2 = 1)$  
 
 Average:  
-\[
+$$
 \text{MSE} = (4 + 25 + 1)/3 = 30/3 = 10
-\]
+$$
 
 So MSE = 10.  
 
@@ -91,10 +92,10 @@ Squaring means **big errors get punished much more** than small errors.
 - Suppose actual ratings: 4, 4, 4, 4, 4  
 - Model A predicts: 3.5, 3.5, 3.5, 3.5, **3.5**  
   - Errors: 0.5 five times.  
-  - MSE contribution: \(5 × 0.5^2 = 5 × 0.25 = 1.25\).  
+  - MSE contribution: $(5 × 0.5^2 = 5 × 0.25 = 1.25)$  
 - Model B predicts: 4, 4, 4, 4, **0**  
   - Errors: 0, 0, 0, 0, 4.  
-  - MSE contribution: \(0^2 + 0^2 + 0^2 + 0^2 + 4^2 = 16\).  
+  - MSE contribution: $(0^2 + 0^2 + 0^2 + 0^2 + 4^2 = 16)$
 
 Both have “some mistakes”, but because Model B has *one huge error*, its MSE is much worse.  
 
@@ -111,18 +112,18 @@ MAE measures the **average size** of the errors, ignoring direction.
 
 - For each point:
   - Error = actual − predicted  
-  - Take absolute value: \(|\text{error}|\) (drop the sign)  
+  - Take absolute value: $(|\text{error}|)$ (drop the sign)  
 - Average these absolute errors → MAE.  
 
 It tells you: “On average, how far off are my predictions?” in the same units as the data.
 
 ### 4.2 Formula and symbols
 
-\[
+$$
 \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
-\]
+$$
 
-- Same \(y_i\), \(\hat{y}_i\), but no square.
+- Same $(y_i)$, $(\hat{y}_i)$, but no square.
 
 ### 4.3 Simple numeric example
 
@@ -133,11 +134,11 @@ Predicted: 58, 70, 69
 
 Errors: 2, −5, 1  
 
-Absolute errors: \(|2| = 2\), \(|-5| = 5\), \(|1| = 1\)  
+Absolute errors: $(|2| = 2)$, $(|-5| = 5)$, $(|1| = 1)$  
 
-\[
+$$
 \text{MAE} = (2 + 5 + 1)/3 = 8/3 ≈ 2.67
-\]
+$$
 
 Interpretation: on average, you are off by about 2.67 kg.  
 
@@ -148,9 +149,9 @@ MAE **adds errors linearly**; no squaring.
 Using the movie rating example:  
 
 - Model A: errors: 0.5, 0.5, 0.5, 0.5, 0.5  
-  - MAE = \((0.5 × 5)/5 = 0.5\).  
+  - MAE = $(0.5 × 5)/5 = 0.5$  
 - Model B: errors: 0, 0, 0, 0, 4  
-  - MAE = \((0 + 0 + 0 + 0 + 4)/5 = 0.8\).  
+  - MAE = $(0 + 0 + 0 + 0 + 4)/5 = 0.8$  
 
 MAE increased from 0.5 to 0.8; not as dramatic as MSE jump (1.25 → 16).  
 So **MAE is less sensitive to outliers** and treats each error more uniformly.
@@ -163,12 +164,14 @@ Use MAE when:
 
 ## 5. MSE vs MAE – intuitive comparison
 
+```
 | Aspect | MSE | MAE |
 |--------|-----|-----|
-| Formula | Average of squared errors \((y - \hat{y})^2\) | Average of absolute errors \(|y - \hat{y}|\) |
+| Formula | Average of squared errors \\((y - \\hat{y})^2\\) | Average of absolute errors \\(|y - \\hat{y}|\\) |
 | Punishment | Big errors explode (square) | Big errors increase linearly |
 | Outlier effect | Very high (one outlier can dominate) | Lower (outlier still matters but not insanely) |
 | Units | Squared units (e.g., kg²) | Same as data (e.g., kg) |
+```
 | Use when | Large mistakes are especially dangerous | Want robustness and easy interpretation |
 
 
@@ -177,7 +180,7 @@ Use MAE when:
 
 In supervised learning (regression):
 
-1. Model makes predictions \(\hat{y}_i\) for each training example.  
+1. Model makes predictions $(\hat{y}_i)$ for each training example.  
 2. Loss function (MSE or MAE) computes **how bad** those predictions are.  
 3. Optimization algorithm adjusts parameters to **minimize** that loss.  
 4. Loss ↓ → predictions generally get better.  
@@ -197,8 +200,8 @@ Binary cross-entropy (BCE) is the **loss function** most commonly used when the 
 ## 1. Setup: what kind of problem?
 
 Binary classification:  
-- Each example has a **true label** \(y\): either 0 or 1.  
-- The model outputs a **probability** \(\hat{y}\) between 0 and 1 (e.g. 0.93 = 93% chance it is class 1).
+- Each example has a **true label** $(y)$: either 0 or 1.  
+- The model outputs a **probability** $(\hat{y})$ between 0 and 1 (e.g. 0.93 = 93% chance it is class 1).
 - Later, you might threshold at 0.5 to turn that into a hard Yes/No, but BCE works directly with the probability.
 
 Examples of such problems:  
@@ -212,12 +215,12 @@ Examples of such problems:
 
 For one data point:  
 
-\[
+$$
 \text{BCE}(y, \hat{y}) = -\big( y \log(\hat{y}) + (1 - y)\log(1 - \hat{y}) \big)
-\]
+$$
 
-- \(y\) is 0 or 1 (true label).
-- \(\hat{y}\) is the predicted probability that the label is 1 (between 0 and 1).
+- $(y)$ is 0 or 1 (true label).
+- $(\hat{y})$ is the predicted probability that the label is 1 (between 0 and 1).
 
 For many data points, you just average over all of them.
 
@@ -225,22 +228,22 @@ For many data points, you just average over all of them.
 
 ## 3. Intuition: two cases
 
-Because \(y\) is either 0 or 1, only **one** of the two log terms is active each time.
+Because $(y)$ is either 0 or 1, only **one** of the two log terms is active each time.
 
 ### Case A: true label \(y = 1\)
 
 Then the loss becomes:  
 
-\[
+$$
 -\log(\hat{y})
-\]
+$$
 
-- If \(\hat{y} = 0.99\):  
-  - Loss = \(-\log(0.99)\) ≈ 0.01 → **tiny loss** (model is confident and correct).  
-- If \(\hat{y} = 0.5\):  
-  - Loss ≈ \(-\log(0.5)\) ≈ 0.69 → medium loss.  
-- If \(\hat{y} = 0.01\):  
-  - Loss ≈ \(-\log(0.01)\) ≈ 4.6 → **huge loss** (very confident but wrong).  
+- If $(\hat{y} = 0.99)$:  
+  - Loss = $(-\log(0.99))$ ≈ 0.01 → **tiny loss** (model is confident and correct).  
+- If $(\hat{y} = 0.5)$:  
+  - Loss ≈ $(-\log(0.5))$ ≈ 0.69 → medium loss.  
+- If $(\hat{y} = 0.01)$:  
+  - Loss ≈ $(-\log(0.01))$ ≈ 4.6 → **huge loss** (very confident but wrong).  
 
 So: **for positive examples, BCE punishes giving low probability to 1**.
 
@@ -248,16 +251,16 @@ So: **for positive examples, BCE punishes giving low probability to 1**.
 
 Then the loss becomes:  
 
-\[
+$$
 -\log(1 - \hat{y})
-\]
+$$
 
-- If \(\hat{y} = 0.01\) (you predict 1% chance of being class 1):  
-  - Loss ≈ \(-\log(0.99)\) ≈ 0.01 → tiny.  
-- If \(\hat{y} = 0.5\):  
-  - Loss ≈ 0.69 again.  
-- If \(\hat{y} = 0.99\):  
-  - Loss ≈ \(-\log(0.01)\) ≈ 4.6 → huge.  
+- If $(\hat{y} = 0.01)$ (you predict 1% chance of being class 1):  
+  - Loss ≈ $(-\log(0.99))$ ≈ 0.01 → tiny.  
+- If $(\hat{y} = 0.5)$:  
+  - Loss ≈ $(-\log(0.5))$ ≈ 0.69 again.  
+- If $(\hat{y} = 0.99)$:  
+  - Loss ≈ $(-\log(0.01))$ ≈ 4.6 → huge.  
 
 So: **for negative examples, BCE punishes giving high probability to 1**.
 
@@ -269,8 +272,8 @@ This matches what we want: be **confident and correct**, not confident and wrong
 
 The log has two useful properties here:
 
-- \(\log(1) = 0\) → if you predict probability 1 for the correct class, loss = 0 (perfect).  
-- \(\log(\text{number close to 0})\) is a large negative number → after the minus sign, **loss becomes very large** when you assign tiny probability to the correct class.  
+- $(\log(1) = 0)$ → if you predict probability 1 for the correct class, loss = 0 (perfect).  
+- $(\log(\text{number close to 0}))$ is a large negative number → after the minus sign, **loss becomes very large** when you assign tiny probability to the correct class.  
 
 So log-loss / BCE:  
 - Grows slowly when you’re already reasonably correct (0.8 → 0.9 → 0.95).  
@@ -287,52 +290,54 @@ Imagine spam detection.
 
 You have 4 emails:  
 
-| Email | True label \(y\) | Model’s probability \(\hat{y}\) (spam) |
+```
+| Email | True label $(y)$ | Model’s probability $(\hat{y})$ (spam) |
 |------|------------------|-----------------------------------------|
 | A | 1 | 0.9 |
 | B | 1 | 0.6 |
 | C | 0 | 0.2 |
 | D | 0 | 0.9 |
+```
 
 Now compute loss per email.  
 
-1) Email A: spam, \(y=1\), \(\hat{y}=0.9\)  
+1) Email A: spam, $(y=1)$, $(\hat{y}=0.9)$  
 
-\[
+$$
 \text{loss}_A = -\log(0.9) \approx 0.105
-\]
+$$
 
 Small (good).  
 
-2) Email B: spam, \(y=1\), \(\hat{y}=0.6\)  
+2) Email B: spam, $(y=1)$, $(\hat{y}=0.6)$  
 
-\[
+$$
 \text{loss}_B = -\log(0.6) \approx 0.511
-\]
+$$
 
 Medium (you only gave 60% spam probability).  
 
-3) Email C: not spam, \(y=0\), \(\hat{y}=0.2\)  
+3) Email C: not spam, $(y=0)$, $(\hat{y}=0.2)$  
 
-\[
+$$
 \text{loss}_C = -\log(1 - 0.2) = -\log(0.8) \approx 0.223
-\]
+$$
 
 Small-ish (you said 20% spam, so mostly correct).  
 
-4) Email D: not spam, \(y=0\), \(\hat{y}=0.9\)  
+4) Email D: not spam, $(y=0)$, $(\hat{y}=0.9)$  
 
-\[
+$$
 \text{loss}_D = -\log(1 - 0.9) = -\log(0.1) \approx 2.303
-\]
+$$
 
 Huge (you were 90% confident it *was* spam, but it’s actually not).  
 
 Average BCE over all 4:  
 
-\[
+$$
 \text{BCE} \approx (0.105 + 0.511 + 0.223 + 2.303)/4 \approx 0.785
-\]
+$$
 
 The big mistake on Email D dominates the loss, which is exactly what BCE is designed to do.
 

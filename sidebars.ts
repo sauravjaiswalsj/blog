@@ -12,6 +12,15 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        {
+          "type": "category",
+          "label": "Hashing",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "dsa/Hashing/leetcode14"
+          ]
+        },
         "dsa/arrays",
         "dsa/graphs",
         "dsa/trees"
@@ -29,9 +38,19 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
-            "maths/6.120J/proofs"
+            "maths/6.120J/proofs",
+            "maths/6.120J/Set"
           ]
         }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Java Programming",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "java/Spring"
       ]
     },
     {
@@ -40,7 +59,61 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        "systems/Latency vs Throughput",
+        "systems/LogStore",
         "systems/overview"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "OS Storage",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "OS-Storage/Fsync",
+        "OS-Storage/Page-cache",
+        "OS-Storage/Replication"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Projects",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "LogStores",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Projects/LogStores/Background",
+            "Projects/LogStores/Design",
+            "Projects/LogStores/Log",
+            "Projects/LogStores/LogStore",
+            "Projects/LogStores/Revisit",
+            "Projects/LogStores/Work"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Warwick",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "DA CS910",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Warwick/DA-CS910/LossFunction",
+            "Warwick/DA-CS910/Slide1",
+            "Warwick/DA-CS910/Slide2"
+          ]
+        }
       ]
     },
     {
