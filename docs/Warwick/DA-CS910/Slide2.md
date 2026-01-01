@@ -14,7 +14,7 @@
 
 ### Supervised learning
 
-- Given input \(X\) and output labels \(Y\), learn a mapping \(f: \mathcal{X} \to \mathcal{Y}\).
+- Given input $(X)$ and output labels $(Y)$, learn a mapping $(f: \mathcal{X} \to \mathcal{Y})$.
 - **Classification**: output is discrete (classes). Example:  
   - Inputs: images of digits; outputs: labels 0–9.
 - **Regression**: output is continuous (numbers). Example:  
@@ -22,9 +22,9 @@
 
 ### Unsupervised learning
 
-- Given inputs \(X\) only, learn structure/functions without labels.
-- **Clustering**: group similar items; model \(f: X \to \{1, \dots, K\}\) where \(K\) is also unknown.
-- **Dimensionality reduction**: map high‑dimensional data (e.g. images) to low‑dimensional coordinates \(F(\text{image}) = (x, y)\) that capture main variability (e.g. pose, expression).
+- Given inputs $(X)$ only, learn structure/functions without labels.
+- **Clustering**: group similar items; model $(f: X \to \{1, \dots, K\})$ where $(K)$ is also unknown.
+- **Dimensionality reduction**: map high‑dimensional data (e.g. images) to low‑dimensional coordinates $(F(\text{image}) = (x, y))$ that capture main variability (e.g. pose, expression).
 
 ### Reinforcement learning
 
@@ -35,7 +35,7 @@
 ## 3. Experience: train, validation, test
 
 - Training data: used to fit the model parameters.
-- Validation data: used to tune hyperparameters (e.g. \(k\) in k‑NN, learning rate) without biasing evaluation.
+- Validation data: used to tune hyperparameters (e.g. $(k)$ in k‑NN, learning rate) without biasing evaluation.
 - Test data: unseen during training/tuning; used once to evaluate final generalisation.
 
 ### Overfitting and generalisation
@@ -69,8 +69,8 @@
 
 Think of learning as “how wrong is my model?” quantified by a number.
 
-- For each example, model outputs a prediction \(\hat{y}\); there is a true value \(y\).
-- Loss tells you “distance” between \(y\) and \(\hat{y}\). If you **sum/average** loss across all training examples, you get how bad your model is overall.
+- For each example, model outputs a prediction $(\hat{y})$; there is a true value $(y)$.
+- Loss tells you “distance” between $(y)$ and $(\hat{y})$. If you **sum/average** loss across all training examples, you get how bad your model is overall.
 - Optimisation algorithms (e.g. gradient descent) try to change model parameters to **reduce** this average loss – like descending a hill until you reach the bottom.
 
 Without a loss function, the model has no numerical signal telling it which direction is “better” when adjusting parameters.
@@ -95,28 +95,28 @@ Why they matter:
 
 ### Definition and maths
 
-For \(n\) examples:
+For $(n)$ examples:
 
-- True values: \(y_1, y_2, \dots, y_n\)  
-- Predictions: \(\hat{y}_1, \hat{y}_2, \dots, \hat{y}_n\)  
+- True values: $(y_1, y_2, \dots, y_n)$  
+- Predictions: $(\hat{y}_1, \hat{y}_2, \dots, \hat{y}_n)$  
 
 The **MSE** is:
 
-\[
+$$
 \text{MSE} = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2
-\]
+$$
 
 
 
-- \(y_i - \hat{y}_i\): prediction error for example \(i\).
-- \((y_i - \hat{y}_i)^2\): squared error (always non‑negative).
+- $(y_i - \hat{y}_i)$: prediction error for example $(i)$.
+- $((y_i - \hat{y}_i)^2)$: squared error (always non‑negative).
 - Average over all examples: mean squared error.
 
 Sometimes **RMSE** is used:
 
-\[
+$$
 \text{RMSE} = \sqrt{\text{MSE}}
-\]
+$$
 
 
 
@@ -132,20 +132,20 @@ This is in the same units as the target (e.g. pounds, degrees).
 
 ### Simple numerical example
 
-Suppose true values: \(y = [10, 8, 9]\), predictions \(\hat{y} = [9, 11, 9]\).
+Suppose true values: $(y = [10, 8, 9])$, predictions $(\hat{y} = [9, 11, 9])$.
 
-- Errors: \([-1, 3, 0]\)  
-- Squared errors: \([1, 9, 0]\)  
-- MSE \(= (1 + 9 + 0)/3 = 10/3 \approx 3.33\).  
+- Errors: $([-1, 3, 0])$  
+- Squared errors: $([1, 9, 0])$  
+- MSE $(= (1 + 9 + 0)/3 = 10/3 \approx 3.33)$).  
 
 If you improve the second prediction from 11 → 9 (error 3 → 1):
 
-- New squared errors: \([1, 1, 0]\), MSE \(= 2/3 \approx 0.67\).  
+- New squared errors: $([1, 1, 0])$, MSE $(= 2/3 \approx 0.67)$).  
 - Loss drops a lot, telling the optimiser this direction is good.  
 
 ### Sensitivity to outliers
 
-- If one data point has error 50, its squared error is \(2500\), which can dominate the sum.
+- If one data point has error 50, its squared error is $(50)^2 = 2500$, which can dominate the sum.
 - Thus, MSE is **not robust** to outliers; it tries hard to fit them.  
 
 
@@ -156,9 +156,9 @@ If you improve the second prediction from 11 → 9 (error 3 → 1):
 
 For the same setup:
 
-\[
+$$
 \text{MAE} = \frac{1}{n} \sum_{i=1}^n |y_i - \hat{y}_i|
-\]
+$$
 
 
 
@@ -172,15 +172,16 @@ For the same setup:
 
 ### Simple numerical example
 
-Same true/predictions as before: \(y = [10, 8, 9]\), \(\hat{y} = [9, 11, 9]\).
+Same true/predictions as before: $(y = [10, 8, 9])$, $(\hat{y} = [9, 11, 9])$.
 
-- Absolute errors: \([1, 3, 0]\).  
-- MAE \(= (1 + 3 + 0)/3 = 4/3 \approx 1.33\).  
+- Absolute errors: $(|y_i - \hat{y}_i| = [1, 3, 0])$.  
+- MAE $(= (1 + 3 + 0)/3 = 4/3 \approx 1.33)$.  
 
-If one prediction is very bad, say \(\hat{y}_2 = 30\) (error \(= 22\)):
+If one prediction is very bad, say $(\hat{y}_2 = 30)$ (error $(= 22)$):
 
-- New absolute errors: \([1, 22, 0]\), MAE \(= 23/3 \approx 7.67\).  
-- Compare with MSE: errors \([-1, 22, 0]\), squared = \([1, 484, 0]\), MSE \(= 485/3 \approx 161.67\).  
+- New absolute errors: $(|y_i - \hat{y}_i| = [1, 22, 0])$.  
+- MAE $(= 23/3 \approx 7.67)$.  
+- Compare with MSE: errors $([-1, 22, 0])$, squared = $([1, 484, 0])$, MSE $(= 485/3 \approx 161.67)$
 - MSE explodes far more than MAE; this shows MAE is more robust to large outliers.  
 
 ---
@@ -191,27 +192,27 @@ Used mainly for **binary classification** with probabilistic outputs.
 
 ### Setting
 
-- Each example has true label \(y_i \in \{0,1\}\).
-- Model predicts a **probability** \(\hat{y}_i \in (0,1)\) that the label is 1.
+- Each example has true label $(y_i \in \{0,1\})$.
+- Model predicts a **probability** $(\hat{y}_i \in (0,1))$ that the label is 1.
 
 The **binary cross‑entropy loss** for one example is:
 
-\[
+$$
 L_i = -\big( y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i) \big)
-\]
+$$
 
 
 
-Overall loss is the average of \(L_i\) across all examples.
+Overall loss is the average of $(L_i)$ across all examples.
 
 ### Intuition with cases
 
-- If \(y_i = 1\), loss becomes \(L_i = -\log(\hat{y}_i)\).
-  - If model says \(\hat{y}_i = 0.9\): loss \(= -\log(0.9)\) (small).  
-  - If model says \(\hat{y}_i = 0.01\): loss \(= -\log(0.01)\) (huge).  
-- If \(y_i = 0\), loss becomes \(L_i = -\log(1 - \hat{y}_i)\).
-  - If model says \(\hat{y}_i = 0.1\): loss \(= -\log(0.9)\) (small).  
-  - If model says \(\hat{y}_i = 0.99\): loss \(= -\log(0.01)\) (huge).  
+- If $(y_i = 1)$: loss becomes $(L_i = -\log(\hat{y}_i))$.  
+  - If model says $(\hat{y}_i = 0.9)$: loss $(= -\log(0.9))$ (small).  
+  - If model says $(\hat{y}_i = 0.01)$: loss $(= -\log(0.01))$ (huge).  
+- If $(y_i = 0)$: loss becomes $(L_i = -\log(1 - \hat{y}_i))$.  
+  - If model says $(\hat{y}_i = 0.1)$: loss $(= -\log(0.9))$ (small).  
+  - If model says $(\hat{y}_i = 0.99)$: loss $(= -\log(0.01))$ (huge).
 
 So:
 
