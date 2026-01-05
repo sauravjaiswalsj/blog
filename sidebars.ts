@@ -50,7 +50,8 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
-        "java/Spring"
+        "java/Spring",
+        "java/Streams"
       ]
     },
     {
@@ -109,9 +110,8 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
-            "Warwick/DA-CS910/LossFunction",
-            "Warwick/DA-CS910/Slide1",
-            "Warwick/DA-CS910/Slide2"
+            "Warwick/DA-CS910/ML",
+            "Warwick/DA-CS910/Slide1"
           ]
         }
       ]
