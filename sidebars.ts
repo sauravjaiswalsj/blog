@@ -110,8 +110,10 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
+            "Warwick/DA-CS910/LossFunction",
             "Warwick/DA-CS910/ML",
-            "Warwick/DA-CS910/Slide1"
+            "Warwick/DA-CS910/Slide1",
+            "Warwick/DA-CS910/Slide2"
           ]
         }
       ]
