@@ -126,6 +126,7 @@ const sidebars: SidebarsConfig = {
       "items": [
         "prompts/architecture-diagram-prompt",
         "prompts/deepwiki-master-prompt",
+        "prompts/Learning",
         "prompts/sidebar-generation-prompt",
         "prompts/tex-to-markdown-prompt"
       ]
