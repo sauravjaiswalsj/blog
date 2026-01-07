@@ -67,6 +67,17 @@ const sidebars: SidebarsConfig = {
     },
     {
       "type": "category",
+      "label": "ML",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "ML/LossFunction",
+        "ML/ML-Algo",
+        "ML/ML"
+      ]
+    },
+    {
+      "type": "category",
       "label": "OS Storage",
       "collapsible": true,
       "collapsed": false,
@@ -110,8 +121,6 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
-            "Warwick/DA-CS910/LossFunction",
-            "Warwick/DA-CS910/ML",
             "Warwick/DA-CS910/Slide1",
             "Warwick/DA-CS910/Slide2"
           ]
