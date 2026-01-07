@@ -47,7 +47,7 @@ It demonstrates how **high-throughput, ordered writes** can be achieved by enfor
 
 ### High-Level Architecture Diagram
 
-![log-server](/static/notes/log-server.png)
+![log-server](./log-server.png)
 
 ---### Component Interaction
 

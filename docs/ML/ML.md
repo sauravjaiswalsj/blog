@@ -60,4 +60,4 @@ Underfitting:
 - It fails to learn the relationships between features and the target variable.
 - Indicators: Low training and testing accuracy.
 
-![fitting](/static/notes/fitting.png)
+![fitting](./fitting.png)

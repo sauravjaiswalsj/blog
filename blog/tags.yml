@@ -13,6 +13,18 @@ streaming:
   permalink: /streaming
   description: Streaming tag description
 
+ml:
+  label: Machine Learning
+  permalink: /ml
+  description: Machine Learning tag description
+
+ai:
+  label: Artificial Intelligence
+  permalink: /ai
+  description: Artificial Intelligence tag description
+
+
+
 hola:
   label: Hola
   permalink: /hola
