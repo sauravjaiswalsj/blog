@@ -111,6 +111,16 @@ const sidebars: SidebarsConfig = {
     },
     {
       "type": "category",
+      "label": "Quant",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "Quant/month2",
+        "Quant/Roadmap"
+      ]
+    },
+    {
+      "type": "category",
       "label": "Warwick",
       "collapsible": true,
       "collapsed": false,
