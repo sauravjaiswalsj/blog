@@ -121,6 +121,16 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
+            {
+              "type": "category",
+              "label": "Project",
+              "collapsible": true,
+              "collapsed": true,
+              "items": [
+                "Warwick/DA-CS910/Project/chap-1",
+                "Warwick/DA-CS910/Project/learning"
+              ]
+            },
             "Warwick/DA-CS910/Slide1",
             "Warwick/DA-CS910/Slide2"
           ]
