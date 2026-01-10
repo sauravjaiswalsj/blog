@@ -3,7 +3,7 @@
 
 **“Funds with lower expense ratios have higher risk-adjusted returns (Sharpe ratio)”**
 
-Before jumping to videos/articles, let’s **frame the learning problem properly** (first-principles style 👇).
+Before jumping, let’s **frame the learning problem properly** (first-principles style 👇).
 
 ---
 
@@ -170,3 +170,89 @@ If you want, next we can:
 
 Just tell me what you want next —
 and I’ll keep **this exact first-principles style** throughout 🚀
+
+
+Absolutely — here are **direct links** to *videos* and *articles* you can use to learn **why lower expense ratios matter and how they relate to risk-adjusted returns** (including Sharpe ratio). These are beginner-friendly and high-quality sources:
+
+---
+
+## 📘 **Articles — Read to build strong conceptual foundation**
+
+### 📌 **What Expense Ratios Are**
+
+🔗 *Investopedia — Expense Ratio Definition*
+[https://www.investopedia.com/terms/e/expenseratio.asp](https://www.investopedia.com/terms/e/expenseratio.asp) ([Investopedia][1])
+
+### 📌 **Why Expense Ratios Matter**
+
+🔗 *Investopedia — Pay Attention to Your Fund’s Expense Ratio*
+[https://www.investopedia.com/articles/personal-finance/092613/pay-attention-your-funds-expense-ratio.asp](https://www.investopedia.com/articles/personal-finance/092613/pay-attention-your-funds-expense-ratio.asp) ([Investopedia][2])
+
+### 📌 **How Expenses Affect Long-Term Returns (with examples)**
+
+🔗 *Vanguard — How Expense Ratios Affect Long-Term Returns*
+[https://investor.vanguard.com/investor-resources-education/education/expense-ratio](https://investor.vanguard.com/investor-resources-education/education/expense-ratio) ([Vanguard][3])
+
+### 📌 **How Expense Ratios Fit Into Fund Evaluation**
+
+🔗 *SoFi — Morningstar ratings and expense ratios*
+[https://www.sofi.com/learn/content/morningstar-review-system-explained/](https://www.sofi.com/learn/content/morningstar-review-system-explained/) ([SoFi][4])
+
+### 📌 **Sharpe Ratio Explained (risk-adjusted return)**
+
+🔗 *Investopedia — Sharpe Ratio Definition & Formula*
+[https://www.investopedia.com/terms/s/sharperatio.asp](https://www.investopedia.com/terms/s/sharperatio.asp) ([Investopedia][5])
+
+---
+
+## 🎥 **Videos — Watch to build intuition**
+
+### 📺 **What Is the Sharpe Ratio?**
+
+🔗 *YouTube — Sharpe Ratio Explained*
+[https://www.youtube.com/watch?v=TaAcvfcbR0I](https://www.youtube.com/watch?v=TaAcvfcbR0I) ([youtube.com][6])
+
+### 📺 **Another Sharpe Ratio Explainer**
+
+🔗 *YouTube — Sharpe Ratio and Why It Matters*
+[https://www.youtube.com/watch?v=QpVhm_Ab84k](https://www.youtube.com/watch?v=QpVhm_Ab84k) ([youtube.com][7])
+
+### 📺 **Expense Ratio & Costs of Investing**
+
+🔗 *YouTube — What Is an Expense Ratio? (CNBC)*
+[https://www.youtube.com/watch?v=iwPnVMPJPjc](https://www.youtube.com/watch?v=iwPnVMPJPjc) ([youtube.com][8])
+
+### 📺 **The Case for Low-Cost Investments (index funds)**
+
+*(very helpful for understanding why lower costs help returns statistically)*
+🔗 *YouTube — Ben Felix on Low-Cost Investing*
+[https://www.youtube.com/watch?v=Nv5CiRSCVxA](https://www.youtube.com/watch?v=Nv5CiRSCVxA) ([youtube.com][9])
+
+---
+
+## 🧠 Optional (Extra Context)
+
+If you later want to explore **how expense ratios actually reduce net returns mathematically over time**, check this article:
+
+🔗 *UTI Mutual Fund article on expense ratio impact*
+[https://www.utimf.com/articles/expense-ratio-in-mutual-funds](https://www.utimf.com/articles/expense-ratio-in-mutual-funds) ([utimf.com][10])
+
+---
+
+If you want, I can also:
+✔ build a **reading roadmap** (videos ➝ articles ➝ practice questions)
+✔ create a short **summary cheat sheet** you can save
+✔ explain these ideas using a simple **analogy** (like “investment drag = friction in a car”)
+
+Just tell me how deep you want to go! 🚀
+
+[1]: https://www.investopedia.com/terms/e/expenseratio.asp?utm_source=chatgpt.com "Expense Ratio: Definition, Formula, Components, and ..."
+[2]: https://www.investopedia.com/articles/personal-finance/092613/pay-attention-your-funds-expense-ratio.asp?utm_source=chatgpt.com "Pay Attention to Your Fund's Expense Ratio"
+[3]: https://investor.vanguard.com/investor-resources-education/education/expense-ratio?utm_source=chatgpt.com "What is an expense ratio? Costs of investing explained"
+[4]: https://www.sofi.com/learn/content/morningstar-review-system-explained/?utm_source=chatgpt.com "Guide to Morningstar Ratings"
+[5]: https://www.investopedia.com/terms/s/sharperatio.asp?utm_source=chatgpt.com "Sharpe Ratio: Definition, Formula, and Examples"
+[6]: https://www.youtube.com/watch?v=TaAcvfcbR0I&utm_source=chatgpt.com "The Sharpe Ratio"
+[7]: https://www.youtube.com/watch?v=QpVhm_Ab84k&utm_source=chatgpt.com "Sharpe Ratio"
+[8]: https://www.youtube.com/watch?v=iwPnVMPJPjc&utm_source=chatgpt.com "What Is An Expense Ratio? | CNBC"
+[9]: https://www.youtube.com/watch?v=Nv5CiRSCVxA&utm_source=chatgpt.com "The Case for Index Funds"
+[10]: https://www.utimf.com/articles/expense-ratio-in-mutual-funds?utm_source=chatgpt.com "Understand Expense Ratio in Mutual Funds and Its Impact ..."
