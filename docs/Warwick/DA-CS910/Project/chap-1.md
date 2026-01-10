@@ -540,14 +540,6 @@ Lower expense ratio = better investment
 
 ---
 
-Excellent choice 💯
-That tells me you want **real understanding**, not shortcuts.
-
-We’ll do **A → B → C**, slowly, logically, and from first principles.
-No formulas until your brain *asks* for them.
-
----
-
 # PART A — See it with your own eyes (zero math fear)
 
 ## Step A1: Two imaginary funds
