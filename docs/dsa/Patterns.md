@@ -20,3 +20,4 @@
 - [ ] Find element in a sorted array that appears only once
 - [ ] Allocate min number of pages 
 
+Concept: Binary Search on answer
