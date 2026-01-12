@@ -14,6 +14,15 @@ const sidebars: SidebarsConfig = {
       "items": [
         {
           "type": "category",
+          "label": "Binary Search",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "dsa/Binary-Search/BS1"
+          ]
+        },
+        {
+          "type": "category",
           "label": "Hashing",
           "collapsible": true,
           "collapsed": true,
