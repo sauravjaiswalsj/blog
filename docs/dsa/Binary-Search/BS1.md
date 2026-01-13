@@ -15,7 +15,7 @@ ps:
 low = 0
 high = len(arr) - 1
 
-do until low <= high:
+do until low `<=` high:
     find mid = low + (high - low) // 2
     if arr[mid] == target:
         return mid

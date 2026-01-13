@@ -18,7 +18,8 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
-            "dsa/Binary-Search/BS1"
+            "dsa/Binary-Search/BS1",
+            "dsa/Binary-Search/LowerBound-UpperBound"
           ]
         },
         {
