@@ -155,6 +155,16 @@ const sidebars: SidebarsConfig = {
             "Warwick/DA-CS910/Slide1",
             "Warwick/DA-CS910/Slide2"
           ]
+        },
+        {
+          "type": "category",
+          "label": "HPC",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Warwick/HPC/Into",
+            "Warwick/HPC/notes1"
+          ]
         }
       ]
     },

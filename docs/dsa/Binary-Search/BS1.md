@@ -1,6 +1,7 @@
 # Binary Search
+Binary Search is a fast algorithm for searching in a sorted arra of keys `S`. To search for key q, we compare `q` to the middle key `S[n\2]`. If `q` appears before `S[n\2]`, it must reside in the top half; if not, it must reside in the bottom half of `S`. If repeating this process recusively on the correct half, we locatte the key in a total of `log[n]` comparisions.
 
-Search for an element in a sorted array.
+Search for an element in a sorted array. 
 
 eg:
 ```
@@ -25,6 +26,23 @@ do until low `<=` high:
         high = mid - 1
 
 return -1
+
+or 
+
+```java
+int binarySearch(int[] S, int q, int low, int high){
+    if (low > high)
+        return -1;
+    int mid = low + (high - low) /2;
+
+    if (S[mid] == 0)
+        return mid;
+    else if (S[mid] < q)
+        return binarySearch(S, q, mid + 1, high);
+    else 
+        return binarySearch(S, q, low, mid - 1);
+}
+```
 
 code:
 ```java
