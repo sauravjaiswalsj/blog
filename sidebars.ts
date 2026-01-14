@@ -165,6 +165,16 @@ const sidebars: SidebarsConfig = {
             "Warwick/HPC/Into",
             "Warwick/HPC/notes1"
           ]
+        },
+        {
+          "type": "category",
+          "label": "ML",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Warwick/ML/Lec2",
+            "Warwick/ML/Slide1"
+          ]
         }
       ]
     },
