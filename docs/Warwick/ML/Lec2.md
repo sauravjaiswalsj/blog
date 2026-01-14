@@ -3,6 +3,13 @@
 ## Philosophy of ML ( 5 priciples)
 
 -  Entities (anything the universrse) have explict  or implict representations.
+- Semantic representations: The description is directly available in some medium. (text, image, audio, video, etc.). Semantic relatedness of the entities is context dependent andd this their representation are contextual.
+- Representation of an entitty can allow us to reconstruct or generate it. Structural representations: The description is not directly available in some medium. (pixels, audio waveforms, vectors of features, graphs, etc.) 
+- It is possible to delevop representation in an inductive manner (i.e, through empirical observation of the data).
+- To act effectively and adaptively towards a goal, a being requires
+developing and using causal representations of entities at an appropriate level of complexity.
+
+## first principle of ML
 
 Entities in the universe “having explicit or implicit representations” means that anything that exists can be described in some form that preserves information about it, even if that description is not written down or numerically encoded yet. 
 
