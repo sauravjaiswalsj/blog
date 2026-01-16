@@ -175,6 +175,15 @@ const sidebars: SidebarsConfig = {
             "Warwick/ML/Lec2",
             "Warwick/ML/Slide1"
           ]
+        },
+        {
+          "type": "category",
+          "label": "NLP",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Warwick/NLP/Lec2"
+          ]
         }
       ]
     },
