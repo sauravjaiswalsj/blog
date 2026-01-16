@@ -9,6 +9,18 @@
 - To act effectively and adaptively towards a goal, a being requires
 developing and using causal representations of entities at an appropriate level of complexity.
 
+Algorithms:
+- Feeature analysis/ Representation learning
+- Using Convolutions, Transformers or Graph Layers
+Generative Machine Learning: GANs, Latent Diffusion Models
+Learning Algorithm: Optimization of model parameters
+through gradient descent based on existing data
+Learning mechanisms: Self Supervised Learning, Next word
+prediction
+Reinforcement Learning?
+Structural risk minimization (controls the model complexity
+and hence complexity of representations it learns)
+
 ## first principle of ML
 
 Entities in the universe “having explicit or implicit representations” means that anything that exists can be described in some form that preserves information about it, even if that description is not written down or numerically encoded yet. 
