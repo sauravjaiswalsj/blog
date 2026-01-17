@@ -172,6 +172,7 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
+            "Warwick/ML/Lec-3",
             "Warwick/ML/Lec2",
             "Warwick/ML/Slide1"
           ]
