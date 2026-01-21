@@ -163,7 +163,8 @@ const sidebars: SidebarsConfig = {
           "collapsed": true,
           "items": [
             "Warwick/HPC/Into",
-            "Warwick/HPC/notes1"
+            "Warwick/HPC/notes1",
+            "Warwick/HPC/notes2"
           ]
         },
         {
