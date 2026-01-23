@@ -205,4 +205,9 @@ Stochastic gradient descent (updating using single examples or mini-batches) is 
   - learning only from the teaining data
   - but it is not guaranteed to generalize well to new data
   - this is called the bias-variance tradeoff
+
+  Question:
+
+  - what is emperical risk minimization
+  - how does SVM achive ERM
   
