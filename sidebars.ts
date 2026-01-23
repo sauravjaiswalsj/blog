@@ -176,6 +176,7 @@ const sidebars: SidebarsConfig = {
             "Warwick/ML/Lec-3",
             "Warwick/ML/Lec2",
             "Warwick/ML/lec3",
+            "Warwick/ML/lec4",
             "Warwick/ML/Slide1"
           ]
         },
