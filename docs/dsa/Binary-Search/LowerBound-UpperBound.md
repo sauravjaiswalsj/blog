@@ -19,10 +19,14 @@ public int lowerBound(int[] arr, int target) {
     while (low <= high) {
         int mid = low + (high - low) / 2;   
 
-        if (arr[mid] >= target) {
+        if (arr[mid] == target) {
             ans = mid;
             high = mid - 1;
-        } else {
+        } 
+        else if (arr[mid] > target) {
+            high = mid - 1;
+        }
+        else {
             low = mid + 1;
         }
     }
@@ -50,10 +54,14 @@ public int upperBound(int[] arr, int target) {
     while (low <= high) {
         int mid = low + (high - low) / 2;   
 
-        if (arr[mid] > target) {
+        if (arr[mid] == target) {
             ans = mid;
+            low = mid + 1;
+        } 
+        else if (ans[mid] > target) {
             high = mid - 1;
-        } else {
+        }
+        else {
             low = mid + 1;
         }
     }
