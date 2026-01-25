@@ -32,6 +32,7 @@ const sidebars: SidebarsConfig = {
           ]
         },
         "dsa/arrays",
+        "dsa/coding_pattern",
         "dsa/graphs",
         "dsa/Patterns",
         "dsa/trees"
