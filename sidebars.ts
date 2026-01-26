@@ -31,6 +31,15 @@ const sidebars: SidebarsConfig = {
             "dsa/Hashing/leetcode14"
           ]
         },
+        {
+          "type": "category",
+          "label": "NumberTheory",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "dsa/NumberTheory/Prime"
+          ]
+        },
         "dsa/arrays",
         "dsa/coding_pattern",
         "dsa/graphs",
