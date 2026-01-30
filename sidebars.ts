@@ -116,6 +116,15 @@ const sidebars: SidebarsConfig = {
       "items": [
         {
           "type": "category",
+          "label": "Agent Based",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "Projects/Agent-Based/Project-idea"
+          ]
+        },
+        {
+          "type": "category",
           "label": "LogStores",
           "collapsible": true,
           "collapsed": true,
