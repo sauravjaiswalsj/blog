@@ -146,7 +146,8 @@ const sidebars: SidebarsConfig = {
       "collapsed": false,
       "items": [
         "Quant/month2",
-        "Quant/Roadmap"
+        "Quant/Roadmap",
+        "Quant/SharpeRatio"
       ]
     },
     {
