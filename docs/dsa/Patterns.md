@@ -10,11 +10,14 @@
 - [x] Find an element in a rotated sorted array
 - [x] Search in a Rotated Sorted Array
 - [x] Search in a nearly sorted array
-- [ ] Floor and Ceiling of an Element in a Sorted Array
-- [ ] Next Letter
-- [ ] Index of last 1 in a sorted Array
-- [ ] Find position of an element in a sorted array of infinite numbers
-- [ ] Minimum Difference Element
+- [x] Floor and Ceiling of an Element in a Sorted Array
+- [x] Next Letter
+- [x] Index of last 1 in a sorted Array
+- [x] Find position of an element in a sorted array of infinite numbers
+- [x] Minimum Difference Element
+
+## BINARY SEARCH ON ANSWER
+- [x] Peak Index in a Mountain Array
 - [ ] Bitonic Array Maximum
 - [ ] Search in a Bitonic Array
 - [ ] Search in a row-wise + Col wise sorted array
