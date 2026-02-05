@@ -19,6 +19,7 @@ const sidebars: SidebarsConfig = {
           "collapsed": true,
           "items": [
             "dsa/Binary-Search/BS1",
+            "dsa/Binary-Search/BS2",
             "dsa/Binary-Search/LowerBound-UpperBound"
           ]
         },
