@@ -24,3 +24,15 @@ int[] arr = Arrays.stream(br.readLine().trim().split("\\s+"))
                   .mapToInt(Integer::parseInt)
                   .toArray();
 ```
+
+## Sum of all elements in array
+```java
+Arrays.stream(arr).sum();
+```
+if array is not int 
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+int sum = numbers.stream()
+                 .mapToInt(Integer::intValue)
+                 .sum(); // Result: 15
+```

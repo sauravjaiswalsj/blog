@@ -17,3 +17,59 @@ BS can still be applied on the unsorted array, using this technique.
 - [ ] Search in a row-wise + Col wise sorted array
 - [ ] Find element in a sorted array that appears only once
 - [ ] Allocate min number of pages 
+
+
+# Bitonic Array
+
+An array which is monotonically increasing first and then later monotonically decreasing.
+
+```java
+arr[] = {1, 2, 3, 4, 5, 4, 3, 2, 1}
+```
+
+```md
+5 is the peak element
+```
+
+
+```md
+    *   -> peak element
+   /\  
+  /  \
+ /    \
+```
+
+Find maximum element in bitonic array = Peak element
+
+## Time Complexity
+
+- **Worst Case**: $O(\log n)$
+- **Best Case**: $O(1)$
+- **Average Case**: $O(\log n)$
+
+### Space Complexity
+
+- **Space Complexity**: $O(1)$
+
+### Problems
+
+#### Search in a bitonic array:
+
+```java
+public int search(int[] arr, int target) {
+    int peak = findPeak(arr);
+    int left = binarySearch(arr, target, 0, peak);
+    if (left != -1) {
+        return left;
+    }
+    return binarySearch(arr, target, peak + 1, arr.length - 1);
+}
+```
+
+### Allocate min number of pages related problem
+
+Book Allocation Problem (GFG)
+Aggressive cow (spoj)
+Prata and roti (spoj)
+EKO (spoj)
+Google kickstart A Q-3 2020
