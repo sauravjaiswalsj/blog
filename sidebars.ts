@@ -183,6 +183,19 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
+            {
+              "type": "category",
+              "label": "Coursework1",
+              "collapsible": true,
+              "collapsed": true,
+              "items": [
+                "Warwick/HPC/Coursework1/Assignment1",
+                "Warwick/HPC/Coursework1/background",
+                "Warwick/HPC/Coursework1/FIndings",
+                "Warwick/HPC/Coursework1/Report",
+                "Warwick/HPC/Coursework1/Writing"
+              ]
+            },
             "Warwick/HPC/Into",
             "Warwick/HPC/notes1",
             "Warwick/HPC/notes2"
