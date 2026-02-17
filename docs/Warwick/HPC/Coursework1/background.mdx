@@ -136,20 +136,21 @@ They use **second-order finite differences**:
 
 - Laplacian of pressure (Poisson equation) at $((i,j))$: 
 
-$$
+```math
 \nabla^2 p_{i,j} =
 \frac{p_{i+1,j} - 2p_{i,j} + p_{i-1,j}}{\Delta x^2}
 +
 \frac{p_{i,j+1} - 2p_{i,j} + p_{i,j-1}}{\Delta y^2}
-$$
+```
+
 
 - First derivatives (central differences), e.g.: 
 
-$$
+```math
 \frac{\partial u}{\partial x}\bigg|_{i,j}
 \approx
 \frac{u_{i+1,j} - u_{i-1,j}}{2\Delta x}
-$$
+```
 
 …and similar for $(\partial v/\partial x)$, $(\partial u/\partial y)$, $(\partial v/\partial y)$. 
 
@@ -167,46 +168,46 @@ If we just update u and v from the momentum equations directly, incompressibilit
 1. **Ignore pressure for a moment and predict a “tentative” velocity.**  
    Compute $(f)$ and $(g)$: [warwick.ac](https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs402/hpc-coursework-2025_2026.pdf)
 
-   $$
+   ```math
    f = u^n + \Delta t \left( -u \frac{\partial u}{\partial x}
    - v \frac{\partial u}{\partial y}
    + \nu \nabla^2 u \right)
-   $$
+   ```
 
-   $$
+   ```math
    g = v^n + \Delta t \left( -u \frac{\partial v}{\partial x}
    - v \frac{\partial v}{\partial y}
    + \nu \nabla^2 v \right)
-   $$
+   ```
 
    These are velocities advanced by convection and diffusion only. They generally **do not satisfy** incompressibility. [warwick.ac](https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs402/hpc-coursework-2025_2026.pdf)
 
 2. **Measure how much incompressibility is violated and solve a pressure Poisson equation.**  
    From continuity with $(f,g)$, we derive the discrete pressure equation: 
 
-  $$
+  ```math
    \nabla^2 p_{i,j} = \frac{1}{\Delta t}
    \left(
    \frac{f_{i,j} - f_{i-1,j}}{\Delta x}
    +
    \frac{g_{i,j} - g_{i,j-1}}{\Delta y}
    \right)
-  $$
+  ```
 
    This says: pressure must adjust such that the final velocity field becomes divergence-free again. 
 
 3. **Correct the tentative velocity using pressure gradients.**  
    Once p is known, we correct: [warwick.ac](https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs402/hpc-coursework-2025_2026.pdf)
 
-   $$
+   ```math
    u^{n+1}_{i,j} = f_{i,j}
    - \Delta t \frac{p_{i+1,j} - p_{i,j}}{\Delta x}
-   $$
+   ```
 
-   $$
+   ```math
    v^{n+1}_{i,j} = g_{i,j}
    - \Delta t \frac{p_{i,j+1} - p_{i,j}}{\Delta y}
-   $$
+   ```
 
    After this correction, the velocity field satisfies incompressibility (up to numerical error). 
 
@@ -225,7 +226,7 @@ Karman uses **Successive Over-Relaxation (SOR)**, with a **Red–Black ordering*
 
 - SOR updates pressure iteratively: 
 
-  $$
+  ```math
   p^{k+1}_{i,j}
   = (1 - \omega)p^k_{i,j}
     + \frac{\omega}{4}
@@ -234,7 +235,7 @@ Karman uses **Successive Over-Relaxation (SOR)**, with a **Red–Black ordering*
       + p^k_{i,j+1} + p^{k+1}_{i,j-1}
       - h^2 \, \text{rhs}_{i,j}
     \right)
-  $$
+  ```
 
   where $(\omega)$ is the relaxation parameter and `rhs` is the right-hand side from the discretised Poisson equation. 
 

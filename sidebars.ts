@@ -89,6 +89,15 @@ const sidebars: SidebarsConfig = {
     },
     {
       "type": "category",
+      "label": "Interview",
+      "collapsible": true,
+      "collapsed": false,
+      "items": [
+        "Interview/Barclays"
+      ]
+    },
+    {
+      "type": "category",
       "label": "ML",
       "collapsible": true,
       "collapsed": false,
@@ -189,11 +198,7 @@ const sidebars: SidebarsConfig = {
               "collapsible": true,
               "collapsed": true,
               "items": [
-                "Warwick/HPC/Coursework1/Assignment1",
-                "Warwick/HPC/Coursework1/background",
-                "Warwick/HPC/Coursework1/FIndings",
-                "Warwick/HPC/Coursework1/Report",
-                "Warwick/HPC/Coursework1/Writing"
+                "Warwick/HPC/Coursework1/Assignment1"
               ]
             },
             "Warwick/HPC/Into",
