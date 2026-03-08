@@ -18,6 +18,7 @@ const sidebars: SidebarsConfig = {
           "collapsible": true,
           "collapsed": true,
           "items": [
+            "dsa/Binary-Search/BS-Problems",
             "dsa/Binary-Search/BS1",
             "dsa/Binary-Search/BS2",
             "dsa/Binary-Search/LowerBound-UpperBound"
@@ -44,7 +45,7 @@ const sidebars: SidebarsConfig = {
         "dsa/arrays",
         "dsa/coding_pattern",
         "dsa/graphs",
-        "dsa/Patterns",
+        "dsa/Pattern_notes",
         "dsa/trees"
       ]
     },

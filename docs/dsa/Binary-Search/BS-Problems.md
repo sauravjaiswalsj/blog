@@ -18,10 +18,10 @@
 
 ## BINARY SEARCH ON ANSWER
 - [x] Peak Index in a Mountain Array
-- [ ] Bitonic Array Maximum
-- [ ] Search in a Bitonic Array
-- [ ] Search in a row-wise + Col wise sorted array
-- [ ] Find element in a sorted array that appears only once
-- [ ] Allocate min number of pages 
+- [x] Bitonic Array Maximum
+- [x] Search in a Bitonic Array
+- [x] Search in a row-wise + Col wise sorted array
+- [x] Find element in a sorted array that appears only once
+- [x] Allocate min number of pages 
 
 Concept: Binary Search on answer
