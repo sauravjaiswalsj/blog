@@ -229,7 +229,7 @@ Example:
 
 LeetCode 238 - Product of Array Except Self
 
-Uses prefix product + suffix product.
+### Uses prefix product + suffix product.
 
 Pattern 4 — Suffix Minimum / Maximum
 
@@ -302,7 +302,7 @@ Remove element calculations
 Combine with prefix
 
 
-Two Pointers
+## Two Pointers
 When to Use
 
 Sorted arrays
@@ -340,12 +340,12 @@ Container with most water
 
 Remove duplicates
 
-6. Binary Search
+## Binary Search
 When to Use
 
 Sorted arrays
 
-Monotonic conditions
+### Monotonic conditions
 
 Search space optimization
 
@@ -363,7 +363,7 @@ while left <= right:
         left = mid + 1
 ```
 
-Binary Search on Answer
+### Binary Search on Answer
 
 Very common in CP.
 
@@ -379,7 +379,7 @@ Allocate books
 
 Shipping packages
 
-7. Monotonic Stack
+## Monotonic Stack
 When to Use
 
 Problems involving:
@@ -408,7 +408,7 @@ Daily temperatures
 
 Largest rectangle in histogram
 
-8. Monotonic Queue
+## Monotonic Queue
 
 Used for sliding window min/max.
 
@@ -424,7 +424,7 @@ push new element
 Time:
 
 O(n)
-9. Greedy
+## Greedy
 When to Use
 
 If the problem allows local optimal choices that lead to global optimal.
@@ -439,7 +439,7 @@ Gas station
 
 Typical Pattern
 choose best option now
-10. Heap / Priority Queue
+## Heap / Priority Queue
 When to Use
 
 Top K elements
@@ -460,7 +460,7 @@ K closest points
 
 Merge K sorted lists
 
-11. Backtracking
+## Backtracking
 When to Use
 
 Problems involving:
@@ -486,13 +486,13 @@ def backtrack(path):
         undo
 Examples
 
-Permutations
+## Permutations
 
 N-Queens
 
 Sudoku solver
 
-12. Dynamic Programming
+## Dynamic Programming
 When to Use
 
 Problem has:
@@ -531,6 +531,4 @@ Next greater element	Monotonic Stack
 Top K	Heap
 Combinations/permutations	Backtracking
 Optimization with overlapping states	DP
-
-## Binary Search Patterns
 
