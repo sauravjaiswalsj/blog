@@ -351,10 +351,9 @@ Search space optimization
 
 Core Idea
 
-Reduce search space by half.
-
-O(log n)
+Reduce search space by half. O(log n)
 Classic Template
+```java
 while left <= right:
     mid = (left + right)//2
     
@@ -362,6 +361,8 @@ while left <= right:
         right = mid - 1
     else:
         left = mid + 1
+```
+
 Binary Search on Answer
 
 Very common in CP.
