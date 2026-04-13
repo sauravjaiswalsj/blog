@@ -1,10 +1,11 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Global custom styles — overrides Infima defaults for better typography
+ * and a more polished blog reading experience.
  */
 
-/* You can override the default Infima variables here. */
+/* ══════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════ */
 :root {
   --ifm-color-primary: #2e8555;
   --ifm-color-primary-dark: #29784c;
@@ -13,11 +14,19 @@
   --ifm-color-primary-light: #33925d;
   --ifm-color-primary-lighter: #359962;
   --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
+  --ifm-code-font-size: 94%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ifm-heading-font-weight: 800;
+  --ifm-line-height-base: 1.75;
+  --ifm-font-size-base: 16px;
+
+  /* Blog post max-width */
+  --blog-post-width: 780px;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
   --ifm-color-primary: #25c2a0;
   --ifm-color-primary-dark: #21af90;
@@ -27,4 +36,225 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  --ifm-background-color: #111827;
+  --ifm-card-background-color: #1f2937;
+}
+
+/* Load Inter from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ══════════════════════════════════════════════
+   GLOBAL BODY
+══════════════════════════════════════════════ */
+body {
+  font-family: var(--ifm-font-family-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════════ */
+.navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .navbar {
+  background: rgba(17, 24, 39, 0.85);
+}
+
+/* ══════════════════════════════════════════════
+   BLOG POST PAGE — article typography
+══════════════════════════════════════════════ */
+
+/* Wider readable container for blog articles */
+article.markdown {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--ifm-font-color-base);
+}
+
+/* Headings inside blog posts */
+article.markdown h1,
+article.markdown h2,
+article.markdown h3,
+article.markdown h4 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+article.markdown h2 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+}
+
+article.markdown h3 {
+  margin-top: 2rem;
+  color: var(--ifm-color-primary);
+}
+
+/* Better paragraph spacing */
+article.markdown p {
+  margin-bottom: 1.25rem;
+}
+
+/* Lists */
+article.markdown ul,
+article.markdown ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+article.markdown li {
+  margin-bottom: 0.4rem;
+}
+
+/* Inline code */
+article.markdown code {
+  border-radius: 5px;
+  padding: 0.15em 0.45em;
+  font-size: 0.88em;
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Code blocks */
+article.markdown pre {
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  margin: 1.5rem 0;
+}
+
+/* Blockquotes */
+article.markdown blockquote {
+  border-left: 4px solid var(--ifm-color-primary);
+  background: rgba(37, 194, 160, 0.05);
+  border-radius: 0 8px 8px 0;
+  padding: 0.8rem 1.2rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* Tables */
+article.markdown table {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 0.92rem;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+article.markdown th {
+  background: var(--ifm-color-emphasis-100);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.7rem 1rem;
+}
+
+article.markdown td {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+article.markdown tr:nth-child(even) td {
+  background: var(--ifm-color-emphasis-50, rgba(0,0,0,0.02));
+}
+
+/* Images */
+article.markdown img {
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+article.markdown hr {
+  border: none;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  margin: 2.5rem 0;
+}
+
+/* ══════════════════════════════════════════════
+   BLOG POST HEADER (title, author, date)
+══════════════════════════════════════════════ */
+.blog-post-page header h1[class*='title'] {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* ══════════════════════════════════════════════
+   BLOG LIST PAGE — post cards
+══════════════════════════════════════════════ */
+
+/* Each post preview on the listing page */
+article[class*='blogPost'] {
+  border-radius: 14px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  background: var(--ifm-card-background-color);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+article[class*='blogPost']:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: var(--ifm-color-primary);
+}
+
+/* Post title on listing page */
+article[class*='blogPost'] h2 a {
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  color: var(--ifm-heading-color) !important;
+  text-decoration: none !important;
+  transition: color 0.15s;
+}
+
+article[class*='blogPost'] h2 a:hover {
+  color: var(--ifm-color-primary) !important;
+}
+
+/* Tag pills */
+.tag_zVej {
+  border-radius: 999px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  padding: 0.2rem 0.7rem !important;
+}
+
+/* ══════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════ */
+/* Blog sidebar title */
+[class*='sidebarItemTitle'] {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--ifm-color-emphasis-500) !important;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .footer {
+  background: #0d1117;
 }
