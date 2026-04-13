@@ -34,3 +34,13 @@ hola:
   label: Hola
   permalink: /hola
   description: Hola tag description
+
+bookmarks:
+  label: Bookmarks
+  permalink: /bookmarks
+  description: Useful bookmarks and resources
+
+ML:
+  label: ML
+  permalink: /ML
+  description: Machine Learning tag

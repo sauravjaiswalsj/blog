@@ -1,4 +1,13 @@
+---
+slug: bookmarks
+title: Bookmarks
+authors: [saurav]
+tags: [bookmarks]
+---
+
 # Bookmarks
+
+<!-- truncate -->
 
 [System Design](https://x.com/AvinashSingh_20/status/2015075875193340319)
 
