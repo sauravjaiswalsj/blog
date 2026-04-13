@@ -1,0 +1,45 @@
+---
+slug: quant-dsa-problems
+title: "Quant-Specific DSA Problems"
+authors: [saurav]
+tags: [DSA, Quant, LeetCode, Math]
+---
+
+> Problems specific to IMC / Optiver / Goldman / Jane Street / Citadel interviews — Math, Bit Manipulation & Probability.
+
+<!-- truncate -->
+
+| # | Problem | LC# | Diff | Category | Why It's Asked | Companies |
+|---|---------|-----|------|----------|----------------|----------|
+| 1 | [Single Number](https://leetcode.com/problems/?id=136) | 136 | **Easy** | Bit Manip | XOR cancels duplicates — explains the operation, not just the trick | IMC, Optiver, Goldman |
+| 2 | [Single Number II](https://leetcode.com/problems/?id=137) | 137 | **Medium** | Bit Manip | 32-bit counter per bit modulo 3 — forces bit-level thinking | IMC, Google |
+| 3 | [Counting Bits](https://leetcode.com/problems/?id=338) | 338 | **Easy** | Bit DP | dp[i] = dp[i>>1] + (i&1) — DP via bit shift | Google, IMC |
+| 4 | [Reverse Bits](https://leetcode.com/problems/?id=190) | 190 | **Easy** | Bit Manip | Bit-by-bit shift; know the O(log n) divide-and-conquer version | Optiver, Goldman |
+| 5 | [Number of 1 Bits (Hamming Weight)](https://leetcode.com/problems/?id=191) | 191 | **Easy** | Bit Manip | n & (n-1) clears lowest set bit — fastest approach | IMC, Optiver |
+| 6 | [Sum of Two Integers (no + operator)](https://leetcode.com/problems/?id=371) | 371 | **Medium** | Bit Manip | XOR = sum without carry; AND&lt;&lt;1 = carry; loop until carry=0 | IMC, Goldman, Citadel |
+| 7 | [Missing Number](https://leetcode.com/problems/?id=268) | 268 | **Easy** | Bit / Math | XOR all indices and values; or Gauss formula — both in 2 lines | Google, Optiver |
+| 8 | [Maximum XOR of Two Numbers](https://leetcode.com/problems/?id=421) | 421 | **Hard** | Trie / Bit | Trie of 32 bits; greedily pick opposite bits for max XOR | Google, IMC |
+| 9 | [Pow(x, n)](https://leetcode.com/problems/?id=50) | 50 | **Medium** | Math / Recursion | Fast exponentiation; handle negative n and overflow | Google, Goldman, IMC |
+| 10 | [Sqrt(x) — integer square root](https://leetcode.com/problems/?id=69) | 69 | **Easy** | Binary Search | Binary search in [0, x]; overflow-safe: mid &lt;= x/mid not mid*mid&lt;=x | Google, Optiver, IMC |
+| 11 | [Integer to Roman / Roman to Integer](https://leetcode.com/problems/?id=13) | 13 | **Easy** | Math / Greedy | Greedy from largest symbol; subtractive cases (IV, IX) | Goldman, Bloomberg |
+| 12 | [Factorial Trailing Zeroes](https://leetcode.com/problems/?id=172) | 172 | **Medium** | Math | Count factor-5s: n/5 + n/25 + n/125 + ... — no factorial needed | Goldman, Optiver, IMC |
+| 13 | [Count Primes](https://leetcode.com/problems/?id=204) | 204 | **Medium** | Sieve of Eratostr | Sieve; understand why we start inner loop at p² | Google, IMC, Goldman |
+| 14 | [Excel Sheet Column Number](https://leetcode.com/problems/?id=171) | 171 | **Easy** | Math / Base-26 | Base-26 without zero digit; understand the offset | Goldman, Bloomberg |
+| 15 | [Divide Two Integers (no division)](https://leetcode.com/problems/?id=29) | 29 | **Medium** | Bit / Math | Bit-shift doubling; handle INT_MIN edge case | IMC, Optiver |
+| 16 | [Happy Number](https://leetcode.com/problems/?id=202) | 202 | **Easy** | Math / Floyd | Cycle detection on digit-square sum; Floyd's tortoise or HashSet | Google, Goldman |
+| 17 | [Ugly Number II](https://leetcode.com/problems/?id=264) | 264 | **Medium** | Math / DP | Three pointers ×2, ×3, ×5 advancing; merge smallest; O(n) | Google, IMC |
+| 18 | [Reservoir Sampling — Random Pick Index](https://leetcode.com/problems/?id=398) | 398 | **Medium** | Probability | Pick k-th element with prob 1/k — classic streaming algorithm | Google, FB, IMC |
+| 19 | [Shuffle an Array](https://leetcode.com/problems/?id=384) | 384 | **Medium** | Fisher-Yates | Swap arr[i] with rand(0..i); each permutation equally likely | Optiver, Goldman, IMC |
+| 20 | [Random Pick with Weight](https://leetcode.com/problems/?id=528) | 528 | **Medium** | Prefix Sum + BS | Prefix sum of weights; binary search for target weight | Google, FB |
+| 21 | [Implement Rand10() Using Rand7()](https://leetcode.com/problems/?id=470) | 470 | **Medium** | Rejection Samp | Rejection sampling; generate uniform [1,49], reject >40; know expected calls | IMC, Google, Optiver |
+| 22 | [Linked List Random Node](https://leetcode.com/problems/?id=382) | 382 | **Medium** | Reservoir Samp | Reservoir sampling without knowing length; online algorithm | Google, FB |
+| 23 | [Pascal's Triangle II](https://leetcode.com/problems/?id=119) | 119 | **Easy** | Combinatorics | In-place update backwards; each value is C(row,col) | Goldman, Google |
+| 24 | [Unique Paths](https://leetcode.com/problems/?id=62) | 62 | **Medium** | DP / Math | C(m+n-2, m-1) combinatorics answer; or 2D DP — know both | Google, Goldman, IMC |
+| 25 | [Catalan Number (nth)](https://leetcode.com/problems/?id=—) | — | **Medium** | Math | C_n = C(2n,n)/(n+1); arises in parentheses, BST counts, triangulation | IMC, Jane Street — concept |
+| 26 | [Stone Game](https://leetcode.com/problems/?id=877) | 877 | **Medium** | Math / DP / Game | First player always wins — prove mathematically; DP for follow-ups | Google, Goldman |
+| 27 | [Nim Game](https://leetcode.com/problems/?id=292) | 292 | **Easy** | Math / Game | Lose iff n%4==0 — O(1); explain the modular reasoning | IMC, Goldman, Optiver |
+| 28 | [Largest Number](https://leetcode.com/problems/?id=179) | 179 | **Medium** | Greedy / Custom Sort | Custom comparator: a+b vs b+a lexicographically | Google, Goldman |
+| 29 | [Reverse Integer](https://leetcode.com/problems/?id=7) | 7 | **Medium** | Overflow | Check overflow BEFORE multiplying: if rev > INT_MAX/10 then overflow | Bloomberg, Goldman |
+| 30 | [String to Integer (atoi)](https://leetcode.com/problems/?id=8) | 8 | **Medium** | Parsing | State machine approach; handle spaces, signs, overflow, non-digits | FB, Google, Goldman |
+| 31 | [Valid Number](https://leetcode.com/problems/?id=65) | 65 | **Hard** | Parsing/State | Deterministic state machine; full edge case coverage expected | Goldman, Palantir |
+

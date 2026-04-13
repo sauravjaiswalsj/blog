@@ -44,3 +44,33 @@ ML:
   label: ML
   permalink: /ML
   description: Machine Learning tag
+
+FAANG:
+  label: FAANG
+  permalink: /faang
+  description: FAANG interview preparation
+
+LeetCode:
+  label: LeetCode
+  permalink: /leetcode
+  description: LeetCode problems and solutions
+
+Quant:
+  label: Quant Finance
+  permalink: /quant
+  description: Quantitative finance and trading firm interview problems
+
+Math:
+  label: Mathematics
+  permalink: /math
+  description: Mathematical problem solving
+
+SystemDesign:
+  label: System Design
+  permalink: /system-design
+  description: System design concepts and interview prep
+
+StudyPlan:
+  label: Study Plan
+  permalink: /study-plan
+  description: Structured study and revision plans

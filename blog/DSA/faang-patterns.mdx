@@ -1,0 +1,93 @@
+---
+slug: faang-dsa-patterns
+title: "FAANG DSA — Pattern-Wise Problem List"
+authors: [saurav]
+tags: [DSA, FAANG, LeetCode]
+---
+
+> Pattern-wise problem list for FAANG / Quant SDE-1/SDE-2 interviews. All solutions in Java.
+
+<!-- truncate -->
+
+| # | Problem | LC# | Difficulty | Key Insight | Companies |
+|---|---------|-----|-----------|-------------|----------|
+| 1 | Two Sum II – Input Array Is Sorted | [167](https://leetcode.com/problems/?id=167) | **Easy** | Classic two-pointer squeeze; ask why it works on sorted input | Google, Amazon |
+| 2 | Container With Most Water | [11](https://leetcode.com/problems/?id=11) | **Medium** | Move the shorter pointer inward — counter-intuitive but provably optimal | Google, Apple, Bloomberg |
+| 3 | Trapping Rain Water | [42](https://leetcode.com/problems/?id=42) | **Hard** | Two-pointer O(1) space beats the stack solution in interviews; know both | Google, FB, Amazon, Citadel |
+| 4 | 3Sum | [15](https://leetcode.com/problems/?id=15) | **Medium** | Sort + fix one, squeeze others; de-dup at both fix and squeeze level | Google, FB, Microsoft |
+| 5 | Minimum Window Substring | [76](https://leetcode.com/problems/?id=76) | **Hard** | Two maps + shrink-when-valid — easiest source of bugs; count 'formed' carefully | FB, Google, Palantir |
+| 6 | Longest Substring Without Repeating Chars | [3](https://leetcode.com/problems/?id=3) | **Medium** | HashMap of last-seen index; jump left pointer, don't just nudge | FB, Amazon, Google |
+| 7 | Longest Repeating Character Replacement | [424](https://leetcode.com/problems/?id=424) | **Medium** | Key: window_len - max_freq &lt;= k; max_freq never needs to decrease | Google, Palantir |
+| 8 | Sliding Window Maximum | [239](https://leetcode.com/problems/?id=239) | **Hard** | Monotonic deque — only elements that could be future maximums stay | Google, Amazon, Optiver |
+| 9 | Minimum Size Subarray Sum | [209](https://leetcode.com/problems/?id=209) | **Medium** | Shrink from left once sum >= target; track minimum length | Google, Facebook |
+| 10 | Fruit Into Baskets | [904](https://leetcode.com/problems/?id=904) | **Medium** | At most K distinct — same template as LC 3 with k=2 | Google |
+| 11 | Search in Rotated Sorted Array | [33](https://leetcode.com/problems/?id=33) | **Medium** | One half is always sorted — binary search on which half, not value | FB, Google, Amazon, Bloomberg |
+| 12 | Find Minimum in Rotated Sorted Array | [153](https://leetcode.com/problems/?id=153) | **Medium** | Compare mid with right, not left; handles duplicates differently | Google, FB |
+| 13 | Median of Two Sorted Arrays | [4](https://leetcode.com/problems/?id=4) | **Hard** | Binary search on partition, not value — O(log min(m,n)); top FAANG hard | Google, FB, Amazon — very common |
+| 14 | Koko Eating Bananas | [875](https://leetcode.com/problems/?id=875) | **Medium** | Binary search on answer space; viable_answer(k) is monotone | Google, FB |
+| 15 | Split Array Largest Sum | [410](https://leetcode.com/problems/?id=410) | **Hard** | Same BS-on-answer pattern; feasibility check is greedy | Google, IMC, Palantir |
+| 16 | Binary Tree Max Path Sum | [124](https://leetcode.com/problems/?id=124) | **Hard** | DFS returns max gain from node; global max is node + left + right gains | FB, Google — very frequent |
+| 17 | Serialize / Deserialize Binary Tree | [297](https://leetcode.com/problems/?id=297) | **Hard** | BFS or preorder; handling nulls correctly is the trick | Google, FB, Amazon — top 5 asked |
+| 18 | Binary Tree Right Side View | [199](https://leetcode.com/problems/?id=199) | **Medium** | BFS level-order, take last of each level OR DFS right-first with depth tracking | FB, Amazon, Bloomberg |
+| 19 | Lowest Common Ancestor of BST | [235](https://leetcode.com/problems/?id=235) | **Medium** | In BST: if both &lt; root go left, both &gt; go right, else root is LCA | FB, Google, Microsoft |
+| 20 | Construct BT from Preorder + Inorder | [105](https://leetcode.com/problems/?id=105) | **Medium** | root = preorder[0]; find in inorder, recurse both halves — HashMap for O(1) lookup | Google, Amazon |
+| 21 | Kth Smallest Element in a BST | [230](https://leetcode.com/problems/?id=230) | **Medium** | Iterative inorder with counter; or Morris traversal for O(1) space | Google, FB |
+| 22 | Count Good Nodes in Binary Tree | [1448](https://leetcode.com/problems/?id=1448) | **Medium** | DFS passing max-so-far; node is good if val >= max on path | FB |
+| 23 | Flatten Binary Tree to Linked List | [114](https://leetcode.com/problems/?id=114) | **Medium** | Morris-like: right-connect left subtree then recurse; no extra space | Google, Amazon, Palantir |
+| 24 | Number of Islands | [200](https://leetcode.com/problems/?id=200) | **Medium** | DFS flood-fill; mark visited in-place to save space — classic warm-up | Amazon, Google, Bloomberg, FB |
+| 25 | Clone Graph | [133](https://leetcode.com/problems/?id=133) | **Medium** | BFS + HashMap&lt;oldNode, newNode&gt;; visited map doubles as clone map | FB, Google |
+| 26 | Pacific Atlantic Water Flow | [417](https://leetcode.com/problems/?id=417) | **Medium** | Reverse BFS from both oceans simultaneously; intersection = answer | Google, Amazon, Palantir |
+| 27 | Word Ladder | [127](https://leetcode.com/problems/?id=127) | **Hard** | BFS, not DFS — shortest path; precompute wildcard buckets for O(1) neighbors | Google, FB, Amazon |
+| 28 | Number of Connected Components in Graph | [323](https://leetcode.com/problems/?id=323) | **Medium** | Union-Find or DFS — practice both implementations cleanly | LinkedIn, Google |
+| 29 | Walls and Gates | [286](https://leetcode.com/problems/?id=286) | **Medium** | Multi-source BFS from all gates simultaneously — not individual BFS per gate | FB, Google |
+| 30 | Course Schedule II | [210](https://leetcode.com/problems/?id=210) | **Medium** | Kahn's BFS topo sort — return empty if cycle detected | Google, FB, Amazon |
+| 31 | Alien Dictionary | [269](https://leetcode.com/problems/?id=269) | **Hard** | Build graph from adjacent words; topo sort — handle invalid inputs carefully | Google, FB, Palantir — elite problem |
+| 32 | Find Eventual Safe States | [802](https://leetcode.com/problems/?id=802) | **Medium** | Reverse graph: safe = not in cycle; DFS coloring (white/gray/black) | Google |
+| 33 | Minimum Height Trees | [310](https://leetcode.com/problems/?id=310) | **Medium** | Topological leaf-trimming — centroid(s) of tree give min height roots | Google, LinkedIn |
+| 34 | Network Delay Time | [743](https://leetcode.com/problems/?id=743) | **Medium** | Dijkstra from source; heap-based priority queue — template problem | Google, IMC, Optiver |
+| 35 | Cheapest Flights Within K Stops | [787](https://leetcode.com/problems/?id=787) | **Medium** | Bellman-Ford with K relaxation rounds; Dijkstra won't work directly here | Google, Amazon, Palantir |
+| 36 | Climbing Stairs | [70](https://leetcode.com/problems/?id=70) | **Easy** | Fibonacci in disguise — but explain it as DP, not math, in interviews | Google, Amazon |
+| 37 | House Robber | [198](https://leetcode.com/problems/?id=198) | **Medium** | dp[i] = max(dp[i-2]+nums[i], dp[i-1]); compress to two variables | Google, Amazon, Palantir |
+| 38 | Longest Increasing Subsequence | [300](https://leetcode.com/problems/?id=300) | **Medium** | O(n log n) with patience sorting / binary search — know both O(n²) and O(n log n) | Google, IMC, Goldman — very frequent |
+| 39 | Word Break | [139](https://leetcode.com/problems/?id=139) | **Medium** | dp[i] = any dp[j] && word[j..i] in set; iterate all splits | Google, FB, Amazon |
+| 40 | Decode Ways | [91](https://leetcode.com/problems/?id=91) | **Medium** | dp[i] depends on 1-digit and 2-digit decodings; handle '0' edge cases | FB, Google, Palantir |
+| 41 | Jump Game II | [45](https://leetcode.com/problems/?id=45) | **Medium** | Greedy BFS levels — track current max reach; jumps++ at each level boundary | Google, Amazon, Optiver |
+| 42 | Coin Change | [322](https://leetcode.com/problems/?id=322) | **Medium** | dp[amount] = min coins; iterate amounts outer, coins inner for unbounded | Google, FB, Amazon — very common |
+| 43 | Longest Common Subsequence | [1143](https://leetcode.com/problems/?id=1143) | **Medium** | Classic 2D DP; trace back for actual sequence — know reconstruction | Google, Goldman, IMC |
+| 44 | Edit Distance | [72](https://leetcode.com/problems/?id=72) | **Hard** | 3 operations map to 3 transitions; diagonal = match/replace | Google, FB — elite DP |
+| 45 | Partition Equal Subset Sum | [416](https://leetcode.com/problems/?id=416) | **Medium** | 0/1 knapsack boolean DP; iterate weights backwards to avoid reuse | Google, Amazon, Palantir |
+| 46 | Burst Balloons | [312](https://leetcode.com/problems/?id=312) | **Hard** | Interval DP — think 'last balloon to burst' not first; dp[l][r] | Google, IMC — hard interval DP |
+| 47 | Regular Expression Matching | [10](https://leetcode.com/problems/?id=10) | **Hard** | dp[i][j]: pattern[j]='*' means zero or more of pattern[j-1]; 4 cases | Google, FB — top hard |
+| 48 | Interleaving String | [97](https://leetcode.com/problems/?id=97) | **Medium** | dp[i][j]: s3[i+j-1] matches s1[i] or s2[j] with correct DP path | Google, FB |
+| 49 | Kth Largest Element in an Array | [215](https://leetcode.com/problems/?id=215) | **Medium** | Min-heap of size k; or Quickselect O(n) avg — know both | FB, Google, Amazon, Goldman |
+| 50 | Merge K Sorted Lists | [23](https://leetcode.com/problems/?id=23) | **Hard** | Min-heap of (val, list_index, node); clean pointer management | Google, FB, Amazon — top 10 asked |
+| 51 | Find Median from Data Stream | [295](https://leetcode.com/problems/?id=295) | **Hard** | Two heaps: max-heap left + min-heap right; balance after each insert | Google, FB — design + heap |
+| 52 | Task Scheduler | [621](https://leetcode.com/problems/?id=621) | **Medium** | Greedy: most frequent task drives idle time; heap for simulation | FB, Google, Amazon |
+| 53 | K Closest Points to Origin | [973](https://leetcode.com/problems/?id=973) | **Medium** | Max-heap of size k; or Quickselect; Euclidean dist — no sqrt needed | FB, Amazon, Google |
+| 54 | Smallest Range Covering K Lists | [632](https://leetcode.com/problems/?id=632) | **Hard** | Heap tracking one element per list + sliding max; classic hard heap | Google, IMC — hard |
+| 55 | Min Stack | [155](https://leetcode.com/problems/?id=155) | **Medium** | Auxiliary stack of minimums; push only when new min found (optimization) | Amazon, Google, Bloomberg |
+| 56 | Largest Rectangle in Histogram | [84](https://leetcode.com/problems/?id=84) | **Hard** | Monotonic stack of indices; pop when shorter bar found — area calc is subtle | Google, Amazon, Palantir — frequent |
+| 57 | Maximal Rectangle | [85](https://leetcode.com/problems/?id=85) | **Hard** | Reduce each row to histogram, apply LC 84 — 2D extension | Google, Amazon |
+| 58 | Daily Temperatures | [739](https://leetcode.com/problems/?id=739) | **Medium** | Monotonic decreasing stack of indices; pop when warmer day found | FB, Amazon, Google |
+| 59 | Car Fleet | [853](https://leetcode.com/problems/?id=853) | **Medium** | Sort by position desc; stack of arrival times — slower fleet absorbs faster | Google, Palantir |
+| 60 | Largest Rectangle in Binary Matrix | [221](https://leetcode.com/problems/?id=221) | **Medium** | Maximal square DP: dp[i][j] = min(left, up, diag) + 1 when cell=1 | Google, FB, Goldman |
+| 61 | Expression Add Operators | [282](https://leetcode.com/problems/?id=282) | **Hard** | Carry prev term to undo multiplication; 3 choices per split | Google, FB — elite backtracking |
+| 62 | Remove Invalid Parentheses | [301](https://leetcode.com/problems/?id=301) | **Hard** | BFS by removal count; generate all at min-removal level | FB — frequently asked |
+| 63 | Partition to K Equal Sum Subsets | [698](https://leetcode.com/problems/?id=698) | **Medium** | Sort desc + try filling each bucket; skip duplicates at same level | Google, FB, Amazon |
+| 64 | Zuma Game | [488](https://leetcode.com/problems/?id=488) | **Hard** | Backtracking with memoization; insert same-color balls greedily | Google — hard |
+| 65 | Merge Intervals | [56](https://leetcode.com/problems/?id=56) | **Medium** | Sort by start; merge if overlap; classic — get it perfect | Google, FB, Bloomberg — very common |
+| 66 | Insert Interval | [57](https://leetcode.com/problems/?id=57) | **Medium** | 3 phases: before, overlap, after; clean boundary conditions | Google, FB |
+| 67 | Non-overlapping Intervals | [435](https://leetcode.com/problems/?id=435) | **Medium** | Greedy: sort by end, keep interval with earliest end — classic exchange argument | Google, Palantir, IMC |
+| 68 | Meeting Rooms II | [253](https://leetcode.com/problems/?id=253) | **Medium** | Min-heap of end times OR sweep line with events; both O(n log n) | FB, Google, Bloomberg — frequent |
+| 69 | Jump Game | [55](https://leetcode.com/problems/?id=55) | **Medium** | Track max reachable index; if i > max_reach, return false | Google, Amazon, Optiver |
+| 70 | Gas Station | [134](https://leetcode.com/problems/?id=134) | **Medium** | If total gas >= total cost, solution exists; start from last failure point | Google, Amazon, Goldman |
+| 71 | Reverse Linked List II | [92](https://leetcode.com/problems/?id=92) | **Medium** | Reverse between m and n in one pass; track 4 pointers carefully | FB, Google, Bloomberg |
+| 72 | LRU Cache | [146](https://leetcode.com/problems/?id=146) | **Medium** | HashMap + doubly linked list; get and put both O(1) | Google, FB, Amazon — system design crossover |
+| 73 | Reorder List | [143](https://leetcode.com/problems/?id=143) | **Medium** | Find mid + reverse second half + merge alternating | FB, Google |
+| 74 | Copy List with Random Pointer | [138](https://leetcode.com/problems/?id=138) | **Medium** | Interleave clone nodes or HashMap; O(1) space version is impressive | FB, Amazon, Palantir |
+| 75 | Merge K Sorted Lists | [23](https://leetcode.com/problems/?id=23) | **Hard** | Heap solution — same as Sheet1 Heap section; re-solve until instant | Google, FB, Amazon |
+| 76 | Implement Trie | [208](https://leetcode.com/problems/?id=208) | **Medium** | TrieNode[26] children array; insert + search + startsWith | Google, FB, Amazon |
+| 77 | Word Search II | [212](https://leetcode.com/problems/?id=212) | **Hard** | Trie pruning on backtracking grid search — prune dead branches from Trie | Google, FB — hard combo |
+| 78 | Design Add and Search Words | [211](https://leetcode.com/problems/?id=211) | **Medium** | Trie + DFS on '.' wildcard character | FB, Google |
+| 79 | Palindrome Pairs | [336](https://leetcode.com/problems/?id=336) | **Hard** | Trie or HashMap; 3 cases for valid pairs — tricky edge cases | Google, Palantir — hard |
+

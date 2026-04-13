@@ -1,0 +1,37 @@
+---
+slug: system-design-revision
+title: "System Design Revision — FAANG SDE Level"
+authors: [saurav]
+tags: [DSA, SystemDesign, FAANG]
+---
+
+> System Design revision sheet for SDE-1/SDE-2 full-time roles at Google, FB, Amazon, Palantir, Goldman.
+
+<!-- truncate -->
+
+| # | System / Problem | Core Concepts | Key Design Decisions | Companies | Difficulty |
+|---|-----------------|--------------|---------------------|----------|------------|
+| 1 | Design URL Shortener (TinyURL) | Hashing, base62 encoding, KV store, TTL, redirection, analytics | Hash collision resolution; 301 vs 302 redirect; custom aliases; rate limiting | Google, FB, Amazon, Palantir | **Medium** |
+| 2 | Design a Rate Limiter | Token bucket, leaky bucket, sliding window log/counter; distributed Redis | In-memory vs distributed; per-user vs global; header response X-RateLimit-* | Google, FB, Amazon, Palantir, Goldman | **Medium** |
+| 3 | Design Twitter Feed / News Feed | Fan-out on write vs read, celebrity problem, ranking, timeline, CDN | Push vs pull hybrid; Redis sorted sets for timeline; sharding by user_id | FB, Twitter, Google, Palantir | **Hard** |
+| 4 | Design a Key-Value Store | LSM tree, SSTables, compaction, consistent hashing, replication, CAP theorem | Read vs write optimization; versioning/MVCC; gossip protocol for membership | Google, Amazon, Palantir, IMC | **Hard** |
+| 5 | Design WhatsApp / Chat System | WebSocket, message queues, delivery receipts, presence, group chat, storage | Online vs offline delivery; E2E encryption architecture; message ordering | FB, Google, Amazon | **Hard** |
+| 6 | Design YouTube / Netflix | Video encoding, CDN, chunked upload, adaptive bitrate, recommendation | Separate upload vs streaming path; metadata vs blob storage; geo-routing | Google, Netflix, Amazon, Palantir | **Hard** |
+| 7 | Design a Distributed Cache (Redis-like) | LRU eviction, consistent hashing, replication, hot-key problem, TTL | Cache-aside vs write-through vs write-behind; thundering herd; cache warming | Google, FB, Amazon, Goldman | **Hard** |
+| 8 | Design Uber / Lyft (Ride Sharing) | Geospatial indexing (geohash/quadtree), matching algorithm, surge pricing, trip tracking | Driver-rider matching latency; geohash precision tradeoff; ETA calculation | Uber, Google, Palantir, Amazon | **Hard** |
+| 9 | Design a Web Crawler | BFS traversal, distributed queue, politeness (robots.txt), dedup, storage | URL frontier; Bloom filter for seen URLs; DNS caching; politeness delay | Google, Amazon, Palantir | **Medium** |
+| 10 | Design Google Search Autocomplete | Trie, top-K with heap, precomputed suggestions, personalization, latency | Server-side trie sharded by prefix; client debounce; CDN cache of top queries | Google, FB | **Medium** |
+| 11 | Design a Notification System | Push (FCM/APNs), email, SMS, fanout, priority queues, deduplication, delivery guarantees | At-least-once vs exactly-once; retry with backoff; notification throttling | FB, Amazon, Google, Palantir | **Medium** |
+| 12 | Design Dropbox / Google Drive | Chunked upload, dedup (content hash), sync protocol, conflict resolution, versioning | Delta sync; chunking strategy; offline support; block storage vs object storage | Google, FB, Dropbox, Amazon | **Hard** |
+| 13 | Design a Stock Exchange / Order Book | Order matching engine, order book (bid/ask), latency, persistence, fault tolerance | Price-time priority; lock-free data structures; LMAX Disruptor pattern; recovery | IMC, Optiver, Goldman, Citadel, Jane Street | **Hard** |
+| 14 | Design a Real-Time Leaderboard | Redis sorted sets, score updates, top-K queries, pagination, consistency | Atomic increment in Redis; top-K approximation; time-windowed leaderboards | Google, FB, Optiver, Goldman | **Medium** |
+| 15 | Design a Distributed Message Queue (Kafka-like) | Topics, partitions, consumer groups, offset management, replication, compaction | At-least vs exactly-once delivery; partition key selection; consumer lag monitoring | Google, Amazon, Palantir, Goldman | **Hard** |
+| 16 | Design a Monitoring / Alerting System (Datadog-like) | Time-series DB, metric ingestion, aggregation, anomaly detection, alerting rules | Push vs pull metrics collection; downsampling; cardinality explosion; alert fatigue | Google, Palantir, Goldman, Amazon | **Hard** |
+| 17 | Design a Search Engine (mini Google) | Inverted index, crawling, PageRank, TF-IDF, query parsing, ranking, sharding | Index sharding strategy; real-time vs batch indexing; spelling correction | Google, Palantir, Amazon | **Hard** |
+| 18 | CAP Theorem & BASE vs ACID | Consistency, Availability, Partition tolerance tradeoffs; eventual consistency | When to choose CP vs AP; examples: Zookeeper (CP) vs Cassandra (AP) | All companies | **Medium** |
+| 19 | Consistent Hashing | Virtual nodes, ring, redistribution on add/remove, hotspot mitigation | How many virtual nodes per server; why it beats modulo hashing | Google, Amazon, Palantir, IMC | **Medium** |
+| 20 | SQL vs NoSQL — when to use which | Relational vs document vs wide-column vs graph; ACID vs BASE; scaling patterns | Write-heavy → Cassandra; complex queries → Postgres; flexible schema → MongoDB | All companies | **Easy** |
+| 21 | Load Balancing Strategies | Round-robin, least-connections, consistent hash, L4 vs L7, health checks | Sticky sessions tradeoffs; global vs local load balancers; anycast routing | Google, FB, Amazon, Palantir | **Medium** |
+| 22 | Database Sharding & Replication | Horizontal sharding, partition keys, hotspots, read replicas, master-slave vs multi-master | Re-sharding with consistent hashing; cross-shard transactions; replication lag | All companies | **Hard** |
+| 23 | Message Queues — When & Why | Async decoupling, fan-out, buffering, durability, ordering guarantees | RabbitMQ (complex routing) vs Kafka (streaming/replay) vs SQS (managed) | Google, FB, Amazon, Goldman | **Medium** |
+
