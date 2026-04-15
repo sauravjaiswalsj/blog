@@ -9,4 +9,5 @@ Foundational mathematics for Machine Learning — linear algebra, calculus, prob
 
 <!-- truncate -->
 
-> 🚧 This post is a work in progress. Content coming soon.
+![maths](image.png)
+

@@ -1,5 +1,25 @@
 # Patterns
 
+## Patterns:
+─────────────────────────────────
+Arrays / Two Pointers
+Sliding Window
+Binary Search
+Prefix Sums
+Hashing / Frequency Maps
+Stack / Monotonic Stack
+Recursion & Backtracking
+Tree Traversals (DFS/BFS)
+Graph Traversal (DFS/BFS)
+Topological Sort
+Heap / Priority Queue
+Dynamic Programming (5 sub-patterns)
+Greedy
+Union-Find
+Tries
+Intervals
+Bit Manipulation
+
 ## HashMap and HashSet Patterns
 1. Find duplicates/Uniquenes
 2. Group or Map Elements - Suitable for problems that require mapping elements to other elements or groups.

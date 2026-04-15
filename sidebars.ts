@@ -103,6 +103,7 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        "ML/Learning",
         "ML/LossFunction",
         "ML/ML-Algo",
         "ML/ML"

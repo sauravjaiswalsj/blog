@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Pattern Library — Imperial Interview Prep</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #16161f;
+      --bg4: #1c1c28;
+      --surface: #1e1e2e;
+      --surface2: #252535;
+      --border: rgba(255, 255, 255, 0.07);
+      --border2: rgba(255, 255, 255, 0.12);
+      --text: #e8e8f0;
+      --text2: #9898b0;
+      --text3: #5a5a72;
+      --accent: #7c6af7;
+      --accent2: #a594f9;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --teal: #2dd4bf;
+      --pink: #f472b6;
+      --mono: 'DM Mono', monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── LAYOUT ── */
+    .shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      padding: 2rem 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 2px;
+    }
+
+    .logo {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .logo-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+      font-style: italic;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 4px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-section {
+      padding: 0.25rem 0;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem 0.25rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 1.5rem;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      font-size: 13.5px;
+      color: var(--text2);
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-item.active {
+      color: var(--accent2);
+      border-left-color: var(--accent);
+      background: rgba(124, 106, 247, 0.08);
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-solid {
+      background: var(--green);
+    }
+
+    .dot-active {
+      background: var(--amber);
+    }
+
+    .dot-new {
+      background: var(--text3);
+      border: 1px solid var(--text3);
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+
+    .badge-solid {
+      background: rgba(74, 222, 128, 0.12);
+      color: var(--green);
+    }
+
+    .badge-wip {
+      background: rgba(251, 191, 36, 0.12);
+      color: var(--amber);
+    }
+
+    .badge-new {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--blue);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      padding: 3rem 3.5rem;
+      max-width: 900px;
+    }
+
+    /* ── PANEL ── */
+    .panel {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── PATTERN HEADER ── */
+    .pattern-hero {
+      margin-bottom: 2.5rem;
+    }
+
+    .pattern-eyebrow {
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .pattern-title {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.1;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .pattern-subtitle {
+      font-size: 14px;
+      color: var(--text2);
+    }
+
+    /* ── TWO QUESTION BLOCK ── */
+    .twoq {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .twoq-card {
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .twoq-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+
+    .twoq-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── SIGNALS ── */
+    .signals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .signal {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(124, 106, 247, 0.25);
+      background: rgba(124, 106, 247, 0.08);
+      color: var(--accent2);
+      font-family: var(--mono);
+    }
+
+    /* ── SUB-PATTERNS ── */
+    .subpattern {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .subpattern-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+
+    .subpattern-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .subpattern-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subpattern-num {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+      background: var(--surface);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .subpattern-desc {
+      font-size: 13px;
+      color: var(--text2);
+      margin-left: auto;
+      margin-right: 1rem;
+    }
+
+    .chevron {
+      color: var(--text3);
+      transition: transform 0.2s;
+      font-size: 12px;
+    }
+
+    .subpattern.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .subpattern-body {
+      display: none;
+      padding: 0 1.25rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .subpattern.open .subpattern-body {
+      display: block;
+    }
+
+    .insight-note {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.7;
+      padding: 10px 0 12px;
+      border-left: 2px solid var(--accent);
+      padding-left: 12px;
+      margin: 12px 0;
+      font-style: italic;
+    }
+
+    /* ── CODE ── */
+    pre {
+      background: #0d0d14;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.9;
+      color: #a8b3cf;
+      overflow-x: auto;
+      margin: 10px 0;
+      position: relative;
+    }
+
+    pre::before {
+      content: attr(data-lang);
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kw {
+      color: #c792ea;
+    }
+
+    .type {
+      color: #82aaff;
+    }
+
+    .str {
+      color: #c3e88d;
+    }
+
+    .num {
+      color: #f78c6c;
+    }
+
+    .cmt {
+      color: #546e7a;
+      font-style: italic;
+    }
+
+    .fn {
+      color: #82aaff;
+    }
+
+    .op {
+      color: #89ddff;
+    }
+
+    /* ── LEETCODE LINK ── */
+    .lc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent2);
+      text-decoration: none;
+      border: 1px solid rgba(124, 106, 247, 0.2);
+      background: rgba(124, 106, 247, 0.06);
+      padding: 4px 10px;
+      border-radius: 5px;
+      margin-top: 8px;
+      transition: all 0.15s;
+    }
+
+    .lc-link:hover {
+      background: rgba(124, 106, 247, 0.14);
+      border-color: var(--accent);
+    }
+
+    /* ── GOTCHA BOX ── */
+    .gotcha {
+      background: rgba(248, 113, 113, 0.07);
+      border: 1px solid rgba(248, 113, 113, 0.2);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 13px;
+      color: #fca5a5;
+      line-height: 1.6;
+    }
+
+    .gotcha strong {
+      color: var(--red);
+      font-weight: 500;
+    }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    th {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text3);
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+      vertical-align: top;
+    }
+
+    td:first-child {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ── COMPLEXITY PILLS ── */
+    .complexity {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cpill {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 5px;
+    }
+
+    .cpill-time {
+      background: rgba(45, 212, 191, 0.1);
+      color: var(--teal);
+      border: 1px solid rgba(45, 212, 191, 0.2);
+    }
+
+    .cpill-space {
+      background: rgba(96, 165, 250, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(96, 165, 250, 0.2);
+    }
+
+    /* ── CANONICAL TABLE ── */
+    .canonical-grid {
+      display: grid;
+      gap: 6px;
+    }
+
+    .canonical-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 14px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.15s;
+    }
+
+    .canonical-row:hover {
+      border-color: var(--border2);
+    }
+
+    .canonical-name {
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 400;
+    }
+
+    .canonical-name:hover {
+      color: var(--accent2);
+    }
+
+    .canonical-sub {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+    }
+
+    .diff {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .diff-e {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--green);
+    }
+
+    .diff-m {
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--amber);
+    }
+
+    .diff-h {
+      background: rgba(248, 113, 113, 0.1);
+      color: var(--red);
+    }
+
+    /* ── DP FRAMEWORK ── */
+    .dp-steps {
+      counter-reset: step;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .dp-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .dp-step-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent2);
+      background: rgba(124, 106, 247, 0.1);
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    .dp-step-content {
+      flex: 1;
+    }
+
+    .dp-step-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .dp-step-desc {
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    /* ── HOME PANEL ── */
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+
+    .home-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .home-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-1px);
+    }
+
+    .home-card-icon {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .home-card-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .home-card-desc {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    .home-card-week {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 8px;
+      font-family: var(--mono);
+    }
+
+    /* ── RULE BOX ── */
+    .rule {
+      background: rgba(124, 106, 247, 0.07);
+      border: 1px solid rgba(124, 106, 247, 0.2);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .rule strong {
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    /* ── SCROLLBAR ── */
+    .main::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 2px;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--accent2);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .week-banner {
+      background: linear-gradient(135deg, rgba(124, 106, 247, 0.12), rgba(45, 212, 191, 0.08));
+      border: 1px solid rgba(124, 106, 247, 0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--accent2);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="logo">
+        <div class="logo-title">DSA Pattern<br>Library</div>
+        <div class="logo-sub">Imperial · Interview Prep · Java</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Home</div>
+        <div class="nav-item active" onclick="show('home')">
+          <span class="nav-dot dot-solid"></span> Overview
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Solid ✓</div>
+        <div class="nav-item" onclick="show('two-ptr')"><span class="nav-dot dot-solid"></span> Two Pointers <span
+            class="nav-badge badge-solid">✓</span></div>
+        <div class="nav-item" onclick="show('sliding')"><span class="nav-dot dot-solid"></span> Sliding Window <span
+            class="nav-badge badge-solid">✓</span></div>
+        <div class="nav-item" onclick="show('bsearch')"><span class="nav-dot dot-solid"></span> Binary Search <span
+            class="nav-badge badge-solid">✓</span></div>
+        <div class="nav-item" onclick="show('prefix')"><span class="nav-dot dot-solid"></span> Prefix Sum <span
+            class="nav-badge badge-solid">✓</span></div>
+        <div class="nav-item" onclick="show('hashing')"><span class="nav-dot dot-solid"></span> Hashing <span
+            class="nav-badge badge-solid">✓</span></div>
+        <div class="nav-item" onclick="show('recursion')"><span class="nav-dot dot-solid"></span> Recursion <span
+            class="nav-badge badge-solid">✓</span></div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">In Progress</div>
+        <div class="nav-item" onclick="show('bt')"><span class="nav-dot dot-active"></span> Backtracking <span
+            class="nav-badge badge-wip">Wk 1</span></div>
+        <div class="nav-item" onclick="show('trees')"><span class="nav-dot dot-active"></span> Trees <span
+            class="nav-badge badge-wip">Wk 3</span></div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">New Territory</div>
+        <div class="nav-item" onclick="show('graphs')"><span class="nav-dot dot-new"></span> Graphs <span
+            class="nav-badge badge-new">Wk 5</span></div>
+        <div class="nav-item" onclick="show('topo')"><span class="nav-dot dot-new"></span> Topo + Union-Find <span
+            class="nav-badge badge-new">Wk 6</span></div>
+        <div class="nav-item" onclick="show('dp')"><span class="nav-dot dot-new"></span> Dynamic Programming <span
+            class="nav-badge badge-new">Wk 7</span></div>
+        <div class="nav-item" onclick="show('greedy')"><span class="nav-dot dot-new"></span> Greedy <span
+            class="nav-badge badge-new">Wk 8</span></div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HOME -->
+      <div id="home" class="panel active">
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Imperial College London · Mid-June Target</div>
+          <div class="pattern-title">DSA<br>Pattern Library</div>
+          <div class="pattern-subtitle">One page per pattern. Study the template, not the problem.</div>
+        </div>
+
+        <div class="rule"><strong>The rule:</strong> From every 10 problems, extract 3–4 templates. Revise the
+          templates. Use new problems only to test whether the template transfers.</div>
+        <div class="rule"><strong>Two questions for every pattern:</strong> What does it fundamentally solve? What is
+          the key insight brute force misses?</div>
+
+        <div class="section-title">Pattern Index</div>
+        <div class="home-grid">
+          <div class="home-card" onclick="show('two-ptr')">
+            <div class="home-card-icon">✌️</div>
+            <div class="home-card-name">Two Pointers</div>
+            <div class="home-card-desc">Eliminate O(n²) with two indices</div>
+            <div class="home-card-week">Revision</div>
+          </div>
+          <div class="home-card" onclick="show('sliding')">
+            <div class="home-card-icon">🪟</div>
+            <div class="home-card-name">Sliding Window</div>
+            <div class="home-card-desc">Optimal subarray without recompute</div>
+            <div class="home-card-week">Revision</div>
+          </div>
+          <div class="home-card" onclick="show('bsearch')">
+            <div class="home-card-icon">🔍</div>
+            <div class="home-card-name">Binary Search</div>
+            <div class="home-card-desc">O(log n) on monotonic space</div>
+            <div class="home-card-week">Revision</div>
+          </div>
+          <div class="home-card" onclick="show('prefix')">
+            <div class="home-card-icon">➕</div>
+            <div class="home-card-name">Prefix Sum</div>
+            <div class="home-card-desc">O(1) range queries after O(n) build</div>
+            <div class="home-card-week">Revision</div>
+          </div>
+          <div class="home-card" onclick="show('hashing')">
+            <div class="home-card-icon">#️⃣</div>
+            <div class="home-card-name">Hashing</div>
+            <div class="home-card-desc">Trade space for O(1) lookup</div>
+            <div class="home-card-week">Revision</div>
+          </div>
+          <div class="home-card" onclick="show('recursion')">
+            <div class="home-card-icon">🔄</div>
+            <div class="home-card-name">Recursion</div>
+            <div class="home-card-desc">Reduce to base case, trust the call</div>
+            <div class="home-card-week">Revision</div>
+          </div>
+          <div class="home-card" onclick="show('bt')">
+            <div class="home-card-icon">🌳</div>
+            <div class="home-card-name">Backtracking</div>
+            <div class="home-card-desc">Explore + undo decision trees</div>
+            <div class="home-card-week">Week 1</div>
+          </div>
+          <div class="home-card" onclick="show('graphs')">
+            <div class="home-card-icon">🕸️</div>
+            <div class="home-card-name">Graphs</div>
+            <div class="home-card-desc">BFS + DFS traversal</div>
+            <div class="home-card-week">Week 5</div>
+          </div>
+          <div class="home-card" onclick="show('dp')">
+            <div class="home-card-icon">📊</div>
+            <div class="home-card-name">Dynamic Programming</div>
+            <div class="home-card-desc">Overlapping subproblems</div>
+            <div class="home-card-week">Week 7</div>
+          </div>
+          <div class="home-card" onclick="show('greedy')">
+            <div class="home-card-icon">💡</div>
+            <div class="home-card-name">Greedy</div>
+            <div class="home-card-desc">Local optimal → global optimal</div>
+            <div class="home-card-week">Week 8</div>
+          </div>
+          <div class="home-card" onclick="show('topo')">
+            <div class="home-card-icon">🔗</div>
+            <div class="home-card-name">Topo + Union-Find</div>
+            <div class="home-card-desc">DAG ordering + connectivity</div>
+            <div class="home-card-week">Week 6</div>
+          </div>
+          <div class="home-card" onclick="show('trees')">
+            <div class="home-card-icon">🌲</div>
+            <div class="home-card-name">Trees</div>
+            <div class="home-card-desc">DFS/BFS on hierarchical data</div>
+            <div class="home-card-week">Week 2–3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TWO POINTERS -->
+      <div id="two-ptr" class="panel">
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Parent: Array traversal</div>
+          <div class="pattern-title">Two<br>Pointers</div>
+        </div>
+        <div class="twoq">
+          <div class="twoq-card">
+            <div class="twoq-label">Solves</div>
+            <div class="twoq-text">Eliminate O(n²) nested loops on arrays by maintaining two indices that move toward —
+              or away from — each other</div>
+          </div>
+          <div class="twoq-card">
+            <div class="twoq-label">Key Insight</div>
+            <div class="twoq-text">Sorted order gives you a direction: sum too small → move left up. Sum too big → move
+              right down. Each step eliminates half the remaining pairs.</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Signal Keywords</div>
+          <div class="signals"><span class="signal">sorted array</span><span class="signal">pair / triplet
+              sum</span><span class="signal">palindrome</span><span class="signal">in-place removal</span><span
+              class="signal">container / water</span></div>
+        </div>
+        <div class="section">
+          <div class="section-title">Sub-patterns</div>
+          <div class="subpattern open">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">01</span> Opposite ends — pair sum</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Left pointer gives smallest, right gives largest. Move inward based on
+                comparison.</div>
+              <pre data-lang="java"><span class="cmt">// LC 167 — Two Sum II</span>
+<span class="kw">int</span> left = <span class="num">0</span>, right = numbers.length - <span class="num">1</span>;
+<span class="kw">while</span> (left &lt; right) {
+    <span class="kw">int</span> sum = numbers[left] + numbers[right];
+    <span class="kw">if</span> (sum == target) <span class="kw">return new int</span>[]{left+<span class="num">1</span>, right+<span class="num">1</span>};
+    <span class="kw">else if</span> (sum &lt; target) left++;
+    <span class="kw">else</span> right--;
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+                target="_blank">→ LeetCode 167</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">02</span> Three pointers — fix one, two-pointer
+                the rest</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Sort. Fix i. Run two pointers from i+1 to end. Skip duplicates at all three
+                levels or results repeat.</div>
+              <pre data-lang="java"><span class="cmt">// LC 15 — 3Sum</span>
+Arrays.sort(nums);
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length - <span class="num">2</span>; i++) {
+    <span class="kw">if</span> (i > <span class="num">0</span> &amp;&amp; nums[i] == nums[i-<span class="num">1</span>]) <span class="kw">continue</span>; <span class="cmt">// skip dup</span>
+    <span class="kw">int</span> left = i + <span class="num">1</span>, right = nums.length - <span class="num">1</span>;
+    <span class="kw">while</span> (left &lt; right) {
+        <span class="kw">int</span> sum = nums[i] + nums[left] + nums[right];
+        <span class="kw">if</span> (sum == <span class="num">0</span>) {
+            result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+            <span class="kw">while</span> (left &lt; right &amp;&amp; nums[left] == nums[left+<span class="num">1</span>]) left++;
+            <span class="kw">while</span> (left &lt; right &amp;&amp; nums[right] == nums[right-<span class="num">1</span>]) right--;
+            left++; right--;
+        } <span class="kw">else if</span> (sum &lt; <span class="num">0</span>) left++;
+        <span class="kw">else</span> right--;
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/3sum/" target="_blank">→ LeetCode 15</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">03</span> Greedy opposite ends — maximise area
+              </div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Always move the pointer with the shorter height. Moving the taller one can only
+                decrease area — never increase it.</div>
+              <pre data-lang="java"><span class="cmt">// LC 11 — Container With Most Water</span>
+<span class="kw">int</span> left = <span class="num">0</span>, right = height.length - <span class="num">1</span>, maxWater = <span class="num">0</span>;
+<span class="kw">while</span> (left &lt; right) {
+    <span class="kw">int</span> water = Math.min(height[left], height[right]) * (right - left);
+    maxWater = Math.max(maxWater, water);
+    <span class="kw">if</span> (height[left] &lt; height[right]) left++;
+    <span class="kw">else</span> right--;
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/container-with-most-water/" target="_blank">→
+                LeetCode 11</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">04</span> Same direction — slow/fast</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Slow marks the write position. Fast scans. When fast finds a new value, write it
+                at slow.</div>
+              <pre data-lang="java"><span class="cmt">// LC 26 — Remove Duplicates</span>
+<span class="kw">int</span> slow = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> fast = <span class="num">1</span>; fast &lt; nums.length; fast++) {
+    <span class="kw">if</span> (nums[fast] != nums[slow]) {
+        slow++;
+        nums[slow] = nums[fast];
+    }
+}
+<span class="kw">return</span> slow + <span class="num">1</span>;</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/"
+                target="_blank">→ LeetCode 26</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Gotcha</div>
+          <div class="gotcha"><strong>Requires sorted input</strong> for directional logic to hold. For 3Sum — skip
+            duplicates at all three pointer levels or results repeat. For unsorted Two Sum — use HashMap.</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Complexity</div>
+          <div class="complexity"><span class="cpill cpill-time">Time: O(n)</span><span class="cpill cpill-space">Space:
+              O(1)</span></div>
+        </div>
+        <div class="section">
+          <div class="section-title">Canonical Problems</div>
+          <div class="canonical-grid">
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank">Two Sum
+                II</a><span class="canonical-sub">opposite ends</span><span class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/3sum/"
+                target="_blank">3Sum</a><span class="canonical-sub">fix + two pointer</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/container-with-most-water/" target="_blank">Container With Most
+                Water</a><span class="canonical-sub">greedy opposite</span><span class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">Trapping Rain Water</a><span
+                class="canonical-sub">prefix max + pointer</span><span class="diff diff-h">Hard</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BINARY SEARCH -->
+      <div id="bsearch" class="panel">
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Parent: Divide and conquer on monotonic space</div>
+          <div class="pattern-title">Binary<br>Search</div>
+        </div>
+        <div class="twoq">
+          <div class="twoq-card">
+            <div class="twoq-label">Solves</div>
+            <div class="twoq-text">Find a value in any <strong>monotonic search space</strong> in O(log n) — the space
+              doesn't have to be a physical array</div>
+          </div>
+          <div class="twoq-card">
+            <div class="twoq-label">Key Insight</div>
+            <div class="twoq-text">Every comparison eliminates half the space. Need a yes/no question where all "no"
+              answers live on one side — a clean monotonic boundary.</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Three Critical Details — Never Forget</div>
+          <table>
+            <tr>
+              <th>Detail</th>
+              <th>Why it matters</th>
+            </tr>
+            <tr>
+              <td><code>low &lt;= high</code></td>
+              <td>Handles the single-element case — without = you miss it</td>
+            </tr>
+            <tr>
+              <td><code>low + (high-low)/2</code></td>
+              <td>Prevents integer overflow on large inputs</td>
+            </tr>
+            <tr>
+              <td><code>mid ± 1</code></td>
+              <td>Prevents infinite loop when low == high</td>
+            </tr>
+          </table>
+        </div>
+        <div class="section">
+          <div class="section-title">Sub-patterns</div>
+          <div class="subpattern open">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">01</span> Classic — search sorted array</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <pre data-lang="java"><span class="kw">int</span> low = <span class="num">0</span>, high = arr.length - <span class="num">1</span>;
+<span class="kw">while</span> (low &lt;= high) {
+    <span class="kw">int</span> mid = low + (high - low) / <span class="num">2</span>;
+    <span class="kw">if</span> (arr[mid] == target) <span class="kw">return</span> mid;
+    <span class="kw">else if</span> (arr[mid] &lt; target) low = mid + <span class="num">1</span>;
+    <span class="kw">else</span> high = mid - <span class="num">1</span>;
+}
+<span class="kw">return</span> -<span class="num">1</span>;</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/binary-search/" target="_blank">→ LeetCode 704</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">02</span> Boundary find — first / last position
+              </div><span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Don't return when you find target. Record it. Keep narrowing. Return low at end
+                — it converges to the boundary.</div>
+              <pre data-lang="java"><span class="cmt">// LC 34 — Find First Position</span>
+<span class="kw">int</span> low = <span class="num">0</span>, high = arr.length - <span class="num">1</span>, result = -<span class="num">1</span>;
+<span class="kw">while</span> (low &lt;= high) {
+    <span class="kw">int</span> mid = low + (high - low) / <span class="num">2</span>;
+    <span class="kw">if</span> (arr[mid] == target) {
+        result = mid;
+        high = mid - <span class="num">1</span>; <span class="cmt">// keep searching left</span>
+        <span class="cmt">// use low = mid + 1 for last position</span>
+    } <span class="kw">else if</span> (arr[mid] &lt; target) low = mid + <span class="num">1</span>;
+    <span class="kw">else</span> high = mid - <span class="num">1</span>;
+}
+<span class="kw">return</span> result;</pre>
+              <a class="lc-link"
+                href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/"
+                target="_blank">→ LeetCode 34</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">03</span> Rotated sorted array</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">One half is always sorted. Check which half. Determine which side target falls
+                in. Eliminate the other.</div>
+              <pre data-lang="java"><span class="cmt">// LC 33</span>
+<span class="kw">while</span> (low &lt;= high) {
+    <span class="kw">int</span> mid = low + (high - low) / <span class="num">2</span>;
+    <span class="kw">if</span> (nums[mid] == target) <span class="kw">return</span> mid;
+    <span class="kw">if</span> (nums[low] &lt;= nums[mid]) { <span class="cmt">// left half sorted</span>
+        <span class="kw">if</span> (target &gt;= nums[low] &amp;&amp; target &lt; nums[mid]) high = mid - <span class="num">1</span>;
+        <span class="kw">else</span> low = mid + <span class="num">1</span>;
+    } <span class="kw">else</span> { <span class="cmt">// right half sorted</span>
+        <span class="kw">if</span> (target &gt; nums[mid] &amp;&amp; target &lt;= nums[high]) low = mid + <span class="num">1</span>;
+        <span class="kw">else</span> high = mid - <span class="num">1</span>;
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank">→
+                LeetCode 33</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">04</span> Answer space — binary search on result
+              </div><span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">No array to search. The answer itself is the search space. Ask: "is X feasible?"
+                Yes/no answers form a monotonic boundary. Signal: "minimum speed / capacity / days".</div>
+              <pre data-lang="java"><span class="cmt">// LC 875 — Koko Eating Bananas</span>
+<span class="kw">int</span> low = <span class="num">1</span>, high = Arrays.stream(piles).max().getAsInt();
+<span class="kw">while</span> (low &lt; high) { <span class="cmt">// converges to minimum answer</span>
+    <span class="kw">int</span> mid = low + (high - low) / <span class="num">2</span>;
+    <span class="kw">if</span> (canFinish(piles, mid, h)) high = mid;
+    <span class="kw">else</span> low = mid + <span class="num">1</span>;
+}
+<span class="kw">return</span> low;
+
+<span class="kw">boolean</span> canFinish(<span class="kw">int</span>[] piles, <span class="kw">int</span> k, <span class="kw">int</span> h) {
+    <span class="kw">int</span> hours = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> p : piles) hours += (p + k - <span class="num">1</span>) / k; <span class="cmt">// ceiling</span>
+    <span class="kw">return</span> hours &lt;= h;
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank">→ LeetCode
+                875</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Complexity</div>
+          <div class="complexity"><span class="cpill cpill-time">Time: O(log n)</span><span
+              class="cpill cpill-space">Space: O(1)</span></div>
+        </div>
+        <div class="section">
+          <div class="section-title">Canonical Problems</div>
+          <div class="canonical-grid">
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/binary-search/"
+                target="_blank">Binary Search</a><span class="canonical-sub">classic</span><span
+                class="diff diff-e">Easy</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/"
+                target="_blank">Find First and Last Position</a><span class="canonical-sub">boundary</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank">Search in Rotated
+                Sorted Array</a><span class="canonical-sub">rotated</span><span class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank">Koko Eating Bananas</a><span
+                class="canonical-sub">answer space</span><span class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/" target="_blank">Capacity
+                to Ship Packages</a><span class="canonical-sub">answer space</span><span class="diff diff-m">Med</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACKTRACKING -->
+      <div id="bt" class="panel">
+        <div class="week-banner">📍 Week 1 — Current focus</div>
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Parent: Recursion with state + undo</div>
+          <div class="pattern-title">Back-<br>tracking</div>
+        </div>
+        <div class="twoq">
+          <div class="twoq-card">
+            <div class="twoq-label">Solves</div>
+            <div class="twoq-text">Explore all valid configurations in a decision tree — build candidates incrementally,
+              abandon paths the moment a constraint is violated</div>
+          </div>
+          <div class="twoq-card">
+            <div class="twoq-label">Key Insight</div>
+            <div class="twoq-text">Recursion explores. Backtracking explores and <em>undoes</em>. The undo step makes
+              the same data structure reusable across all branches. Prune before recursing — eliminates entire subtrees.
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">The Three Structural Variables</div>
+          <table>
+            <tr>
+              <th>Variable</th>
+              <th>Controls</th>
+              <th>Subsets</th>
+              <th>Permutations</th>
+              <th>Comb Sum</th>
+            </tr>
+            <tr>
+              <td>Start index</td>
+              <td>Ordering</td>
+              <td><code>i+1</code></td>
+              <td><code>0</code></td>
+              <td><code>i</code> (reuse)</td>
+            </tr>
+            <tr>
+              <td>Loop start</td>
+              <td>Exploration</td>
+              <td><code>idx</code></td>
+              <td><code>0</code></td>
+              <td><code>idx</code></td>
+            </tr>
+            <tr>
+              <td><code>used[]</code></td>
+              <td>Deduplication</td>
+              <td>Not needed</td>
+              <td>Required</td>
+              <td>Not needed</td>
+            </tr>
+          </table>
+        </div>
+        <div class="section">
+          <div class="section-title">Sub-patterns</div>
+          <div class="subpattern open">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">01</span> Subsets — pure exploration</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Add current to result at every node. Loop from idx with i+1 — preserves order,
+                no reuse.</div>
+              <pre data-lang="java"><span class="cmt">// LC 78 — Subsets</span>
+<span class="kw">void</span> backtrack(<span class="kw">int</span>[] nums, <span class="kw">int</span> idx, List&lt;Integer&gt; cur) {
+    result.add(<span class="kw">new</span> ArrayList&lt;&gt;(cur)); <span class="cmt">// snapshot ALWAYS</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = idx; i &lt; nums.length; i++) {
+        cur.add(nums[i]);               <span class="cmt">// choose</span>
+        backtrack(nums, i + <span class="num">1</span>, cur);   <span class="cmt">// explore</span>
+        cur.remove(cur.size() - <span class="num">1</span>);   <span class="cmt">// undo</span>
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/subsets/" target="_blank">→ LeetCode 78</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">02</span> Subsets II — with duplicates</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Sort first. Skip <code>nums[i] == nums[i-1]</code> at the same recursion level
+                only.</div>
+              <pre data-lang="java"><span class="cmt">// LC 90 — Subsets II</span>
+Arrays.sort(nums);
+<span class="kw">void</span> backtrack(<span class="kw">int</span> idx, List&lt;Integer&gt; cur) {
+    result.add(<span class="kw">new</span> ArrayList&lt;&gt;(cur));
+    <span class="kw">for</span> (<span class="kw">int</span> i = idx; i &lt; nums.length; i++) {
+        <span class="kw">if</span> (i > idx &amp;&amp; nums[i] == nums[i-<span class="num">1</span>]) <span class="kw">continue</span>;
+        cur.add(nums[i]);
+        backtrack(i + <span class="num">1</span>, cur);
+        cur.remove(cur.size() - <span class="num">1</span>);
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/subsets-ii/" target="_blank">→ LeetCode 90</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">03</span> Permutations — full loop + used[]
+              </div><span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Order matters so loop from 0 every call. used[] prevents picking same element
+                twice in one path.</div>
+              <pre data-lang="java"><span class="cmt">// LC 46 — Permutations</span>
+<span class="kw">boolean</span>[] used = <span class="kw">new boolean</span>[nums.length];
+<span class="kw">void</span> backtrack(List&lt;Integer&gt; cur) {
+    <span class="kw">if</span> (cur.size() == nums.length) {
+        result.add(<span class="kw">new</span> ArrayList&lt;&gt;(cur)); <span class="kw">return</span>;
+    }
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+        <span class="kw">if</span> (used[i]) <span class="kw">continue</span>;
+        used[i] = <span class="kw">true</span>;
+        cur.add(nums[i]);
+        backtrack(cur);
+        cur.remove(cur.size() - <span class="num">1</span>);
+        used[i] = <span class="kw">false</span>;
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/permutations/" target="_blank">→ LeetCode 46</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">04</span> Combination Sum — pruning on sum</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Pass <code>i</code> not <code>i+1</code> to allow reuse. Sort then break when
+                candidate exceeds remaining — prunes entire subtree.</div>
+              <pre data-lang="java"><span class="cmt">// LC 39 — Combination Sum</span>
+Arrays.sort(candidates);
+<span class="kw">void</span> backtrack(<span class="kw">int</span> idx, <span class="kw">int</span> remain, List&lt;Integer&gt; cur) {
+    <span class="kw">if</span> (remain == <span class="num">0</span>) { result.add(<span class="kw">new</span> ArrayList&lt;&gt;(cur)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> i = idx; i &lt; candidates.length; i++) {
+        <span class="kw">if</span> (candidates[i] > remain) <span class="kw">break</span>; <span class="cmt">// PRUNE</span>
+        cur.add(candidates[i]);
+        backtrack(i, remain - candidates[i], cur); <span class="cmt">// i not i+1</span>
+        cur.remove(cur.size() - <span class="num">1</span>);
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/combination-sum/" target="_blank">→ LeetCode 39</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">05</span> N-Queens — constraint satisfaction
+              </div><span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">One queen per row. Track columns + diagonals. Same diagonal = same (row-col).
+                Anti-diagonal = same (row+col).</div>
+              <pre data-lang="java"><span class="cmt">// LC 51 — N-Queens</span>
+Set&lt;Integer&gt; cols = <span class="kw">new</span> HashSet&lt;&gt;();
+Set&lt;Integer&gt; diag = <span class="kw">new</span> HashSet&lt;&gt;();     <span class="cmt">// row - col</span>
+Set&lt;Integer&gt; anti = <span class="kw">new</span> HashSet&lt;&gt;();     <span class="cmt">// row + col</span>
+
+<span class="kw">void</span> backtrack(<span class="kw">int</span> row, <span class="kw">char</span>[][] board) {
+    <span class="kw">if</span> (row == n) { result.add(construct(board)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> col = <span class="num">0</span>; col &lt; n; col++) {
+        <span class="kw">if</span> (cols.contains(col) || diag.contains(row-col)
+            || anti.contains(row+col)) <span class="kw">continue</span>; <span class="cmt">// PRUNE</span>
+        cols.add(col); diag.add(row-col); anti.add(row+col);
+        board[row][col] = <span class="str">'Q'</span>;
+        backtrack(row + <span class="num">1</span>, board);
+        board[row][col] = <span class="str">'.'</span>;
+        cols.remove(col); diag.remove(row-col); anti.remove(row+col);
+    }
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/n-queens/" target="_blank">→ LeetCode 51</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Gotcha</div>
+          <div class="gotcha"><strong>Always <code>new ArrayList&lt;&gt;(current)</code></strong> when adding to result
+            — adding the reference gives you an empty list later. <strong>Prune before recursing</strong>, not after.
+            <code>i+1</code> vs <code>i</code> controls reuse. <code>idx</code> vs <code>0</code> controls ordering.
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Complexity</div>
+          <div class="complexity"><span class="cpill cpill-time">Subsets: O(2ⁿ)</span><span
+              class="cpill cpill-time">Perms: O(n!)</span><span class="cpill cpill-space">Space: O(n)</span></div>
+        </div>
+      </div>
+
+      <!-- DYNAMIC PROGRAMMING -->
+      <div id="dp" class="panel">
+        <div class="week-banner">📍 Week 7–8 — Hardest pattern. Build systematically.</div>
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Parent: Recursion + memoisation / bottom-up table</div>
+          <div class="pattern-title">Dynamic<br>Programming</div>
+        </div>
+        <div class="twoq">
+          <div class="twoq-card">
+            <div class="twoq-label">Solves</div>
+            <div class="twoq-text">Optimisation or counting problems where the answer to a larger problem is built from
+              answers to smaller <em>overlapping</em> subproblems</div>
+          </div>
+          <div class="twoq-card">
+            <div class="twoq-label">Key Insight</div>
+            <div class="twoq-text">Brute force recursion recomputes the same subproblems exponentially. DP stores each
+              answer once. The trick: define (1) what the subproblem IS and (2) how it relates to smaller ones — the
+              recurrence.</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">The DP Framework — 5 Steps Every Time</div>
+          <div class="dp-steps">
+            <div class="dp-step">
+              <div class="dp-step-num">1</div>
+              <div class="dp-step-content">
+                <div class="dp-step-title">Define state</div>
+                <div class="dp-step-desc">dp[i] means what exactly? Be precise. Vague state = wrong recurrence.</div>
+              </div>
+            </div>
+            <div class="dp-step">
+              <div class="dp-step-num">2</div>
+              <div class="dp-step-content">
+                <div class="dp-step-title">Base case</div>
+                <div class="dp-step-desc">dp[0] = ? dp[1] = ? Base cases are wrong more often than the recurrence.</div>
+              </div>
+            </div>
+            <div class="dp-step">
+              <div class="dp-step-num">3</div>
+              <div class="dp-step-content">
+                <div class="dp-step-title">Recurrence</div>
+                <div class="dp-step-desc">dp[i] = f(dp[i-1], dp[i-2], ...) — derive this from the problem definition.
+                </div>
+              </div>
+            </div>
+            <div class="dp-step">
+              <div class="dp-step-num">4</div>
+              <div class="dp-step-content">
+                <div class="dp-step-title">Answer</div>
+                <div class="dp-step-desc">Which dp value is the final answer? Often dp[n] but not always.</div>
+              </div>
+            </div>
+            <div class="dp-step">
+              <div class="dp-step-num">5</div>
+              <div class="dp-step-content">
+                <div class="dp-step-title">Optimise space</div>
+                <div class="dp-step-desc">Often O(n) table → O(1) variables. Do this last, not first.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Sub-patterns</div>
+          <div class="subpattern open">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">01</span> Linear 1D — Climbing Stairs</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Start here. dp[i] = ways to reach step i. dp[i] = dp[i-1] + dp[i-2]. It's
+                Fibonacci.</div>
+              <pre data-lang="java"><span class="cmt">// LC 70 — Climbing Stairs</span>
+<span class="kw">int</span> a = <span class="num">1</span>, b = <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i &lt;= n; i++) {
+    <span class="kw">int</span> temp = a + b;
+    a = b; b = temp;
+}
+<span class="kw">return</span> b;</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/climbing-stairs/" target="_blank">→ LeetCode 70</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">02</span> House Robber — pick or skip</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">dp[i] = max rob up to house i. At each house: rob it (dp[i-2] + val) or skip
+                (dp[i-1]).</div>
+              <pre data-lang="java"><span class="cmt">// LC 198 — House Robber</span>
+<span class="kw">int</span> prev2 = <span class="num">0</span>, prev1 = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> n : nums) {
+    <span class="kw">int</span> curr = Math.max(prev1, prev2 + n);
+    prev2 = prev1; prev1 = curr;
+}
+<span class="kw">return</span> prev1;</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/house-robber/" target="_blank">→ LeetCode 198</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">03</span> Coin Change — unbounded knapsack</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">dp[i] = min coins to make amount i. Try all coins. Fill with amount+1 as
+                "infinity".</div>
+              <pre data-lang="java"><span class="cmt">// LC 322 — Coin Change</span>
+<span class="kw">int</span>[] dp = <span class="kw">new int</span>[amount + <span class="num">1</span>];
+Arrays.fill(dp, amount + <span class="num">1</span>); <span class="cmt">// "infinity"</span>
+dp[<span class="num">0</span>] = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= amount; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> coin : coins)
+        <span class="kw">if</span> (coin &lt;= i)
+            dp[i] = Math.min(dp[i], <span class="num">1</span> + dp[i - coin]);
+<span class="kw">return</span> dp[amount] &gt; amount ? -<span class="num">1</span> : dp[amount];</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/coin-change/" target="_blank">→ LeetCode 322</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">04</span> LCS — 2D two sequences</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">dp[i][j] = LCS of text1[0..i-1] and text2[0..j-1]. Match → extend diagonal.
+                Mismatch → take best of two neighbours.</div>
+              <pre data-lang="java"><span class="cmt">// LC 1143 — LCS</span>
+<span class="kw">int</span>[][] dp = <span class="kw">new int</span>[m+<span class="num">1</span>][n+<span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= n; j++)
+        <span class="kw">if</span> (text1.charAt(i-<span class="num">1</span>) == text2.charAt(j-<span class="num">1</span>))
+            dp[i][j] = <span class="num">1</span> + dp[i-<span class="num">1</span>][j-<span class="num">1</span>];
+        <span class="kw">else</span>
+            dp[i][j] = Math.max(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+<span class="kw">return</span> dp[m][n];</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">→
+                LeetCode 1143</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">05</span> Edit Distance — insert/delete/replace
+              </div><span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">dp[i][j] = min ops to convert word1[0..i] to word2[0..j]. Match is free.
+                Mismatch: 1 + min of 3 neighbours.</div>
+              <pre data-lang="java"><span class="cmt">// LC 72 — Edit Distance</span>
+<span class="kw">int</span>[][] dp = <span class="kw">new int</span>[m+<span class="num">1</span>][n+<span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= m; i++) dp[i][<span class="num">0</span>] = i;
+<span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt;= n; j++) dp[<span class="num">0</span>][j] = j;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= n; j++)
+        dp[i][j] = w1.charAt(i-<span class="num">1</span>) == w2.charAt(j-<span class="num">1</span>)
+            ? dp[i-<span class="num">1</span>][j-<span class="num">1</span>]
+            : <span class="num">1</span> + Math.min(dp[i-<span class="num">1</span>][j-<span class="num">1</span>],
+                  Math.min(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]));</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/edit-distance/" target="_blank">→ LeetCode 72</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Learning Progression — Follow This Order</div>
+          <table>
+            <tr>
+              <th>Week 7</th>
+              <th>Week 8</th>
+            </tr>
+            <tr>
+              <td>Climbing Stairs → House Robber → House Robber II → Coin Change → Word Break</td>
+              <td>LCS → Edit Distance → LIS → 0/1 Knapsack → Partition Equal Subset Sum</td>
+            </tr>
+          </table>
+        </div>
+        <div class="section">
+          <div class="section-title">Gotcha</div>
+          <div class="gotcha"><strong>Define the state precisely before writing any code.</strong> Vague state = wrong
+            recurrence. Base cases wrong more often than recurrence. 2D DP: table is (m+1)×(n+1) to handle empty string.
+            Fill with <code>amount+1</code> or <code>Integer.MAX_VALUE-1</code> for min problems.</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Canonical Problems</div>
+          <div class="canonical-grid">
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/climbing-stairs/"
+                target="_blank">Climbing Stairs</a><span class="canonical-sub">linear 1D — start here</span><span
+                class="diff diff-e">Easy</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/house-robber/"
+                target="_blank">House Robber</a><span class="canonical-sub">pick or skip</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/coin-change/"
+                target="_blank">Coin Change</a><span class="canonical-sub">unbounded knapsack</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">Longest Common
+                Subsequence</a><span class="canonical-sub">2D two sequences</span><span class="diff diff-m">Med</span>
+            </div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/edit-distance/"
+                target="_blank">Edit Distance</a><span class="canonical-sub">2D insert/delete/replace</span><span
+                class="diff diff-h">Hard</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">Longest Increasing
+                Subsequence</a><span class="canonical-sub">1D subsequence</span><span class="diff diff-m">Med</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAPHS -->
+      <div id="graphs" class="panel">
+        <div class="week-banner">📍 Week 5 — Start here after Trees</div>
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Parent: Graph traversal</div>
+          <div class="pattern-title">Graphs<br>BFS + DFS</div>
+        </div>
+        <div class="twoq">
+          <div class="twoq-card">
+            <div class="twoq-label">Solves</div>
+            <div class="twoq-text">Explore all nodes and edges — find paths, connected components, cycles, shortest
+              paths</div>
+          </div>
+          <div class="twoq-card">
+            <div class="twoq-label">Key Insight</div>
+            <div class="twoq-text">A graph can have cycles so you must track visited nodes or loop forever. BFS explores
+              level by level — first time you reach a node = shortest path. DFS goes deep — use for components and
+              cycles.</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">BFS vs DFS</div>
+          <table>
+            <tr>
+              <th>Goal</th>
+              <th>Use</th>
+            </tr>
+            <tr>
+              <td>Shortest path (unweighted)</td>
+              <td>BFS</td>
+            </tr>
+            <tr>
+              <td>All paths / exhaustive</td>
+              <td>DFS</td>
+            </tr>
+            <tr>
+              <td>Connected components</td>
+              <td>Either (DFS simpler)</td>
+            </tr>
+            <tr>
+              <td>Cycle detection</td>
+              <td>DFS with state array</td>
+            </tr>
+            <tr>
+              <td>Level-by-layer</td>
+              <td>BFS</td>
+            </tr>
+          </table>
+        </div>
+        <div class="section">
+          <div class="section-title">Sub-patterns</div>
+          <div class="subpattern open">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">01</span> DFS — connected components</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">For each unvisited land cell, DFS marks entire component as visited. Count how
+                many times you start a DFS.</div>
+              <pre data-lang="java"><span class="cmt">// LC 200 — Number of Islands</span>
+<span class="kw">void</span> dfs(<span class="kw">char</span>[][] grid, <span class="kw">int</span> i, <span class="kw">int</span> j) {
+    <span class="kw">if</span> (i &lt; <span class="num">0</span> || i &gt;= grid.length || j &lt; <span class="num">0</span> || j &gt;= grid[<span class="num">0</span>].length) <span class="kw">return</span>;
+    <span class="kw">if</span> (grid[i][j] != <span class="str">'1'</span>) <span class="kw">return</span>;
+    grid[i][j] = <span class="str">'0'</span>; <span class="cmt">// mark visited in-place</span>
+    dfs(grid, i+<span class="num">1</span>, j); dfs(grid, i-<span class="num">1</span>, j);
+    dfs(grid, i, j+<span class="num">1</span>); dfs(grid, i, j-<span class="num">1</span>);
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/number-of-islands/" target="_blank">→ LeetCode
+                200</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">02</span> BFS — shortest path</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Mark visited BEFORE adding to queue — not after polling. Otherwise same node
+                enters queue multiple times.</div>
+              <pre data-lang="java"><span class="cmt">// BFS template</span>
+Queue&lt;Integer&gt; q = <span class="kw">new</span> LinkedList&lt;&gt;();
+Set&lt;Integer&gt; vis = <span class="kw">new</span> HashSet&lt;&gt;();
+q.offer(start); vis.add(start);
+<span class="kw">int</span> steps = <span class="num">0</span>;
+<span class="kw">while</span> (!q.isEmpty()) {
+    <span class="kw">int</span> size = q.size();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+        <span class="kw">int</span> node = q.poll();
+        <span class="kw">if</span> (node == target) <span class="kw">return</span> steps;
+        <span class="kw">for</span> (<span class="kw">int</span> nb : graph.get(node))
+            <span class="kw">if</span> (!vis.contains(nb)) { vis.add(nb); q.offer(nb); }
+    }
+    steps++;
+}</pre>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">03</span> Cycle detection — directed graph</div>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Three states: 0 = unvisited, 1 = in current path, 2 = fully done. Cycle =
+                reaching a node in state 1.</div>
+              <pre data-lang="java"><span class="cmt">// LC 207 — Course Schedule</span>
+<span class="kw">int</span>[] state = <span class="kw">new int</span>[n];
+<span class="kw">boolean</span> hasCycle(<span class="kw">int</span> node) {
+    <span class="kw">if</span> (state[node] == <span class="num">1</span>) <span class="kw">return true</span>;
+    <span class="kw">if</span> (state[node] == <span class="num">2</span>) <span class="kw">return false</span>;
+    state[node] = <span class="num">1</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> nb : graph.get(node))
+        <span class="kw">if</span> (hasCycle(nb)) <span class="kw">return true</span>;
+    state[node] = <span class="num">2</span>;
+    <span class="kw">return false</span>;
+}</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/course-schedule/" target="_blank">→ LeetCode
+                207</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Gotcha</div>
+          <div class="gotcha"><strong>Mark visited BEFORE adding to queue</strong> — not after polling. Always check
+            bounds before accessing grid. Disconnected graphs: outer loop over all nodes, not just node 0.</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Complexity</div>
+          <div class="complexity"><span class="cpill cpill-time">Time: O(V + E)</span><span
+              class="cpill cpill-space">Space: O(V)</span></div>
+        </div>
+        <div class="section">
+          <div class="section-title">Canonical Problems</div>
+          <div class="canonical-grid">
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/number-of-islands/"
+                target="_blank">Number of Islands</a><span class="canonical-sub">DFS components</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/clone-graph/"
+                target="_blank">Clone Graph</a><span class="canonical-sub">DFS + HashMap</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/course-schedule/"
+                target="_blank">Course Schedule</a><span class="canonical-sub">cycle detection</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/rotting-oranges/"
+                target="_blank">Rotting Oranges</a><span class="canonical-sub">multi-source BFS</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/pacific-atlantic-water-flow/" target="_blank">Pacific Atlantic Water
+                Flow</a><span class="canonical-sub">reverse DFS</span><span class="diff diff-m">Med</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GREEDY -->
+      <div id="greedy" class="panel">
+        <div class="week-banner">📍 Week 8 — Pairs naturally with Intervals</div>
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Parent: Locally optimal → globally optimal</div>
+          <div class="pattern-title">Greedy</div>
+        </div>
+        <div class="twoq">
+          <div class="twoq-card">
+            <div class="twoq-label">Solves</div>
+            <div class="twoq-text">Optimisation problems where making the locally best choice at each step leads to the
+              globally optimal answer — without exploring all combinations</div>
+          </div>
+          <div class="twoq-card">
+            <div class="twoq-label">Key Insight</div>
+            <div class="twoq-text">Greedy works when local optimal never prevents a global optimal — the greedy choice
+              property. The hard part is proving it. In interviews: identify the pattern, verify with one counterexample
+              attempt, then code.</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Greedy vs DP</div>
+          <table>
+            <tr>
+              <th>Greedy</th>
+              <th>DP</th>
+            </tr>
+            <tr>
+              <td>One pass, never revisit a choice</td>
+              <td>Must consider all choices, build subproblems</td>
+            </tr>
+            <tr>
+              <td>Local optimal = global optimal</td>
+              <td>Local optimal can harm global</td>
+            </tr>
+            <tr>
+              <td>O(n log n) or O(n)</td>
+              <td>O(n²) or O(n×k)</td>
+            </tr>
+          </table>
+          <div style="font-size:12px;color:var(--text3);margin-top:8px;">Rule of thumb: try Greedy first. If a
+            counterexample exists → DP.</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Sub-patterns</div>
+          <div class="subpattern open">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">01</span> Jump Game — track max reach</div><span
+                class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">If current index exceeds the furthest reachable index, return false. Update max
+                reach at every step.</div>
+              <pre data-lang="java"><span class="cmt">// LC 55 — Jump Game</span>
+<span class="kw">int</span> maxReach = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+    <span class="kw">if</span> (i > maxReach) <span class="kw">return false</span>;
+    maxReach = Math.max(maxReach, i + nums[i]);
+}
+<span class="kw">return true</span>;</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/jump-game/" target="_blank">→ LeetCode 55</a>
+            </div>
+          </div>
+          <div class="subpattern">
+            <div class="subpattern-header" onclick="toggle(this)">
+              <div class="subpattern-name"><span class="subpattern-num">02</span> Interval scheduling — sort by end time
+              </div><span class="chevron">▼</span>
+            </div>
+            <div class="subpattern-body">
+              <div class="insight-note">Sort by end time. Greedily keep intervals that end earliest — leaves max room
+                for the rest.</div>
+              <pre data-lang="java"><span class="cmt">// LC 435 — Non-overlapping Intervals</span>
+Arrays.sort(intervals, (a, b) -> a[<span class="num">1</span>] - b[<span class="num">1</span>]); <span class="cmt">// sort by END</span>
+<span class="kw">int</span> count = <span class="num">0</span>, lastEnd = Integer.MIN_VALUE;
+<span class="kw">for</span> (<span class="kw">int</span>[] iv : intervals) {
+    <span class="kw">if</span> (iv[<span class="num">0</span>] &gt;= lastEnd) lastEnd = iv[<span class="num">1</span>]; <span class="cmt">// keep</span>
+    <span class="kw">else</span> count++;                               <span class="cmt">// remove</span>
+}
+<span class="kw">return</span> count;</pre>
+              <a class="lc-link" href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank">→
+                LeetCode 435</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Gotcha</div>
+          <div class="gotcha"><strong>Sort direction matters.</strong> Non-overlapping intervals → sort by end. Meeting
+            rooms scheduling → sort by start. Getting this wrong gives the wrong answer silently.</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Canonical Problems</div>
+          <div class="canonical-grid">
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/jump-game/"
+                target="_blank">Jump Game</a><span class="canonical-sub">max reach</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/jump-game-ii/"
+                target="_blank">Jump Game II</a><span class="canonical-sub">min jumps</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name"
+                href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank">Non-overlapping
+                Intervals</a><span class="canonical-sub">sort by end</span><span class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/gas-station/"
+                target="_blank">Gas Station</a><span class="canonical-sub">circular greedy</span><span
+                class="diff diff-m">Med</span></div>
+            <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/partition-labels/"
+                target="_blank">Partition Labels</a><span class="canonical-sub">last occurrence</span><span
+                class="diff diff-m">Med</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOPO / UF -->
+      <div id="topo" class="panel">
+        <div class="week-banner">📍 Week 6 — After BFS/DFS foundation</div>
+        <div class="pattern-hero">
+          <div class="pattern-eyebrow">Graph algorithms on DAGs and connectivity</div>
+          <div class="pattern-title">Topo Sort +<br>Union-Find</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Topological Sort — Kahn's Algorithm</div>
+          <div class="twoq" style="margin-bottom:1rem;">
+            <div class="twoq-card">
+              <div class="twoq-label">Solves</div>
+              <div class="twoq-text">Order nodes in a DAG so every edge u→v has u before v. Dependency ordering —
+                prerequisite problems.</div>
+            </div>
+            <div class="twoq-card">
+              <div class="twoq-label">Key Insight</div>
+              <div class="twoq-text">Start with nodes that have indegree 0. Process them, reduce neighbours' indegrees.
+                When a neighbour hits 0, it's ready. If final count < total nodes → cycle exists.</div>
+              </div>
+            </div>
+            <pre data-lang="java"><span class="cmt">// LC 207/210 — Course Schedule (Kahn's BFS)</span>
+<span class="kw">int</span>[] indegree = <span class="kw">new int</span>[n];
+<span class="kw">for</span> (<span class="kw">int</span>[] pre : prerequisites) {
+    graph.get(pre[<span class="num">1</span>]).add(pre[<span class="num">0</span>]);
+    indegree[pre[<span class="num">0</span>]]++;
+}
+Queue&lt;Integer&gt; q = <span class="kw">new</span> LinkedList&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) <span class="kw">if</span> (indegree[i] == <span class="num">0</span>) q.offer(i);
+
+List&lt;Integer&gt; order = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="kw">while</span> (!q.isEmpty()) {
+    <span class="kw">int</span> node = q.poll();
+    order.add(node);
+    <span class="kw">for</span> (<span class="kw">int</span> nb : graph.get(node))
+        <span class="kw">if</span> (--indegree[nb] == <span class="num">0</span>) q.offer(nb);
+}
+<span class="kw">return</span> order.size() == n; <span class="cmt">// false = cycle</span></pre>
+            <a class="lc-link" href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">→ LeetCode
+              210</a>
+          </div>
+          <div class="section">
+            <div class="section-title">Union-Find — Disjoint Set</div>
+            <div class="twoq" style="margin-bottom:1rem;">
+              <div class="twoq-card">
+                <div class="twoq-label">Solves</div>
+                <div class="twoq-text">Efficiently track which elements belong to the same connected component — and
+                  merge components dynamically</div>
+              </div>
+              <div class="twoq-card">
+                <div class="twoq-label">Key Insight</div>
+                <div class="twoq-text">Each component has a representative root. find(x) returns root. union(x,y) merges
+                  by connecting roots. Path compression + union by rank → nearly O(1) per operation.</div>
+              </div>
+            </div>
+            <pre data-lang="java"><span class="kw">class</span> UnionFind {
+    <span class="kw">int</span>[] parent, rank;
+    UnionFind(<span class="kw">int</span> n) {
+        parent = <span class="kw">new int</span>[n]; rank = <span class="kw">new int</span>[n];
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) parent[i] = i;
+    }
+    <span class="kw">int</span> find(<span class="kw">int</span> x) {
+        <span class="kw">if</span> (parent[x] != x) parent[x] = find(parent[x]); <span class="cmt">// path compress</span>
+        <span class="kw">return</span> parent[x];
+    }
+    <span class="kw">boolean</span> union(<span class="kw">int</span> x, <span class="kw">int</span> y) {
+        <span class="kw">int</span> px = find(x), py = find(y);
+        <span class="kw">if</span> (px == py) <span class="kw">return false</span>; <span class="cmt">// already connected = cycle</span>
+        <span class="kw">if</span> (rank[px] &lt; rank[py]) { <span class="kw">int</span> t = px; px = py; py = t; }
+        parent[py] = px;
+        <span class="kw">if</span> (rank[px] == rank[py]) rank[px]++;
+        <span class="kw">return true</span>;
+    }
+}</pre>
+            <a class="lc-link" href="https://leetcode.com/problems/redundant-connection/" target="_blank">→ LeetCode
+              684</a>
+          </div>
+          <div class="section">
+            <div class="section-title">Canonical Problems</div>
+            <div class="canonical-grid">
+              <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/course-schedule/"
+                  target="_blank">Course Schedule</a><span class="canonical-sub">topo + cycle</span><span
+                  class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Course Schedule II</a><span
+                  class="canonical-sub">topo ordering</span><span class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/redundant-connection/" target="_blank">Redundant
+                  Connection</a><span class="canonical-sub">union-find cycle</span><span class="diff diff-m">Med</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUB panels for others -->
+        <div id="sliding" class="panel">
+          <div class="pattern-hero">
+            <div class="pattern-eyebrow">Parent: Array / String traversal</div>
+            <div class="pattern-title">Sliding<br>Window</div>
+          </div>
+          <div class="twoq">
+            <div class="twoq-card">
+              <div class="twoq-label">Solves</div>
+              <div class="twoq-text">Find optimal subarray or substring satisfying a condition — without recomputing
+                overlapping work</div>
+            </div>
+            <div class="twoq-card">
+              <div class="twoq-label">Key Insight</div>
+              <div class="twoq-text">Brute force recomputes every subarray. A window remembers what it processed. Expand
+                right when valid, shrink left when constraint violated. State updates are O(1) per step.</div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Signal Keywords</div>
+            <div class="signals"><span class="signal">subarray / substring</span><span class="signal">longest /
+                shortest</span><span class="signal">at most K</span><span class="signal">contiguous</span><span
+                class="signal">window of size K</span></div>
+          </div>
+          <div class="section">
+            <div class="section-title">Fixed Window</div>
+            <pre data-lang="java"><span class="kw">int</span> windowSum = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; k; i++) windowSum += arr[i];
+<span class="kw">int</span> maxSum = windowSum;
+<span class="kw">for</span> (<span class="kw">int</span> i = k; i &lt; arr.length; i++) {
+    windowSum += arr[i] - arr[i - k]; <span class="cmt">// slide</span>
+    maxSum = Math.max(maxSum, windowSum);
+}</pre>
+          </div>
+          <div class="section">
+            <div class="section-title">Variable Window</div>
+            <pre data-lang="java"><span class="kw">int</span> left = <span class="num">0</span>, maxLen = <span class="num">0</span>;
+Map&lt;Character, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> right = <span class="num">0</span>; right &lt; s.length(); right++) {
+    map.merge(s.charAt(right), <span class="num">1</span>, Integer::sum);
+    <span class="kw">while</span> (violatesConstraint(map)) {
+        map.merge(s.charAt(left), -<span class="num">1</span>, Integer::sum);
+        <span class="kw">if</span> (map.get(s.charAt(left)) == <span class="num">0</span>) map.remove(s.charAt(left));
+        left++;
+    }
+    maxLen = Math.max(maxLen, right - left + <span class="num">1</span>);
+}</pre>
+          </div>
+          <div class="section">
+            <div class="section-title">Gotcha</div>
+            <div class="gotcha"><strong>Window length = right - left + 1.</strong> Use while not if to shrink. Never let
+              left pointer go backward — use max(left, ...) when jumping by index.</div>
+          </div>
+          <div class="section">
+            <div class="section-title">Canonical Problems</div>
+            <div class="canonical-grid">
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+                  target="_blank">Longest Substring No Repeat</a><span class="canonical-sub">variable — no
+                  repeats</span><span class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">Minimum Window
+                  Substring</a><span class="canonical-sub">variable — contains all</span><span
+                  class="diff diff-h">Hard</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/max-consecutive-ones-iii/" target="_blank">Max Consecutive Ones
+                  III</a><span class="canonical-sub">at most K</span><span class="diff diff-m">Med</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="prefix" class="panel">
+          <div class="pattern-hero">
+            <div class="pattern-eyebrow">Parent: Array preprocessing</div>
+            <div class="pattern-title">Prefix<br>Sum</div>
+          </div>
+          <div class="twoq">
+            <div class="twoq-card">
+              <div class="twoq-label">Solves</div>
+              <div class="twoq-text">Answer multiple subarray sum queries in O(1) after O(n) preprocessing — eliminates
+                repeated summation</div>
+            </div>
+            <div class="twoq-card">
+              <div class="twoq-label">Key Insight</div>
+              <div class="twoq-text">Sum of [i,j] = prefix[j+1] - prefix[i]. Precompute once. Any range query is one
+                subtraction. With HashMap: finds subarrays summing to K in O(n).</div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Template</div>
+            <pre data-lang="java"><span class="cmt">// Count subarrays with sum == K (LC 560)</span>
+Map&lt;Integer, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+map.put(<span class="num">0</span>, <span class="num">1</span>); <span class="cmt">// CRITICAL — handles subarrays from index 0</span>
+<span class="kw">int</span> sum = <span class="num">0</span>, count = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> x : nums) {
+    sum += x;
+    count += map.getOrDefault(sum - k, <span class="num">0</span>);
+    map.merge(sum, <span class="num">1</span>, Integer::sum);
+}
+<span class="kw">return</span> count;</pre>
+          </div>
+          <div class="section">
+            <div class="section-title">Gotcha</div>
+            <div class="gotcha"><strong>Always initialise map with (0, 1)</strong> — handles subarrays starting at index
+              0. Prefix array is size n+1, not n.</div>
+          </div>
+          <div class="section">
+            <div class="section-title">Canonical Problems</div>
+            <div class="canonical-grid">
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank">Subarray Sum Equals
+                  K</a><span class="canonical-sub">count with hashmap</span><span class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/contiguous-array/" target="_blank">Contiguous Array</a><span
+                  class="canonical-sub">balance 0s and 1s</span><span class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank">Product of Array
+                  Except Self</a><span class="canonical-sub">prefix × suffix</span><span class="diff diff-m">Med</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="hashing" class="panel">
+          <div class="pattern-hero">
+            <div class="pattern-eyebrow">Parent: Trade space for time</div>
+            <div class="pattern-title">Hashing</div>
+          </div>
+          <div class="twoq">
+            <div class="twoq-card">
+              <div class="twoq-label">Solves</div>
+              <div class="twoq-text">Collapse O(n²) nested loops to O(n) by storing previously seen values for O(1)
+                lookup</div>
+            </div>
+            <div class="twoq-card">
+              <div class="twoq-label">Key Insight</div>
+              <div class="twoq-text">Whenever you write a nested loop to "find something seen earlier", a HashMap
+                eliminates the inner loop entirely. Store what you've seen. Look up what you need in O(1).</div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Templates</div>
+            <pre data-lang="java"><span class="cmt">// Complement lookup (Two Sum)</span>
+Map&lt;Integer, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+    <span class="kw">int</span> comp = target - nums[i];
+    <span class="kw">if</span> (map.containsKey(comp)) <span class="kw">return new int</span>[]{map.get(comp), i};
+    map.put(nums[i], i); <span class="cmt">// AFTER lookup</span>
+}
+
+<span class="cmt">// Group by property (Anagrams)</span>
+Map&lt;String, List&lt;String&gt;&gt; groups = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span> (String w : strs) {
+    <span class="kw">char</span>[] ch = w.toCharArray(); Arrays.sort(ch);
+    groups.computeIfAbsent(<span class="kw">new</span> String(ch), x -> <span class="kw">new</span> ArrayList&lt;&gt;()).add(w);
+}</pre>
+          </div>
+          <div class="section">
+            <div class="section-title">Gotcha</div>
+            <div class="gotcha"><strong>Put into map AFTER lookup</strong> — in Two Sum, adding before checking matches
+              an element with itself.</div>
+          </div>
+          <div class="section">
+            <div class="section-title">Canonical Problems</div>
+            <div class="canonical-grid">
+              <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/two-sum/"
+                  target="_blank">Two Sum</a><span class="canonical-sub">complement lookup</span><span
+                  class="diff diff-e">Easy</span></div>
+              <div class="canonical-row"><a class="canonical-name" href="https://leetcode.com/problems/group-anagrams/"
+                  target="_blank">Group Anagrams</a><span class="canonical-sub">group by property</span><span
+                  class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank">Longest Consecutive
+                  Sequence</a><span class="canonical-sub">hashset — sequence start</span><span
+                  class="diff diff-m">Med</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="recursion" class="panel">
+          <div class="pattern-hero">
+            <div class="pattern-eyebrow">Parent: Problem decomposition</div>
+            <div class="pattern-title">Recursion</div>
+          </div>
+          <div class="twoq">
+            <div class="twoq-card">
+              <div class="twoq-label">Solves</div>
+              <div class="twoq-text">Problems expressible as a smaller version of themselves — reduce to base case,
+                trust the recursion</div>
+            </div>
+            <div class="twoq-card">
+              <div class="twoq-label">Key Insight</div>
+              <div class="twoq-text">Define the function's contract. Trust it. Only handle: (1) base case, (2) current
+                step, (3) how to combine. The call stack handles the rest. Never trace every call mentally.</div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Three questions before any recursive function</div>
+            <div class="dp-steps">
+              <div class="dp-step">
+                <div class="dp-step-num">1</div>
+                <div class="dp-step-content">
+                  <div class="dp-step-title">What is my base case?</div>
+                  <div class="dp-step-desc">When do I stop? Missing this = stack overflow.</div>
+                </div>
+              </div>
+              <div class="dp-step">
+                <div class="dp-step-num">2</div>
+                <div class="dp-step-content">
+                  <div class="dp-step-title">What does one call do?</div>
+                  <div class="dp-step-desc">What is the contract of this function?</div>
+                </div>
+              </div>
+              <div class="dp-step">
+                <div class="dp-step-num">3</div>
+                <div class="dp-step-content">
+                  <div class="dp-step-title">How do I get from n to n-1?</div>
+                  <div class="dp-step-desc">What smaller input do I recurse with?</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Template</div>
+            <pre data-lang="java"><span class="kw">int</span> fib(<span class="kw">int</span> n) {
+    <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span> n;        <span class="cmt">// base case</span>
+    <span class="kw">return</span> fib(n-<span class="num">1</span>) + fib(n-<span class="num">2</span>);  <span class="cmt">// trust + combine</span>
+}</pre>
+          </div>
+          <div class="section">
+            <div class="section-title">Gotcha</div>
+            <div class="gotcha"><strong>Missing or wrong base case = stack overflow.</strong> Don't trace every call.
+              Define the contract precisely and trust it.</div>
+          </div>
+        </div>
+
+        <div id="trees" class="panel">
+          <div class="pattern-hero">
+            <div class="pattern-eyebrow">Parent: Recursion on hierarchical structure</div>
+            <div class="pattern-title">Trees</div>
+          </div>
+          <div class="twoq">
+            <div class="twoq-card">
+              <div class="twoq-label">Solves</div>
+              <div class="twoq-text">Hierarchical data problems — paths, depths, ancestors, serialization, level-order
+                traversal</div>
+            </div>
+            <div class="twoq-card">
+              <div class="twoq-label">Key Insight</div>
+              <div class="twoq-text">A tree is a graph with no cycles. Every tree problem is a recursion problem. Ask:
+                do I need information from children first (post-order) or from parent first (pre-order)?</div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Traversal Templates</div>
+            <pre data-lang="java"><span class="cmt">// DFS — Pre-order (root → left → right)</span>
+<span class="kw">void</span> preorder(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    process(node);          <span class="cmt">// root first</span>
+    preorder(node.left);
+    preorder(node.right);
+}
+
+<span class="cmt">// DFS — Post-order (left → right → root)</span>
+<span class="kw">int</span> postorder(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">int</span> left = postorder(node.left);
+    <span class="kw">int</span> right = postorder(node.right);
+    <span class="kw">return</span> combine(left, right, node); <span class="cmt">// root last</span>
+}
+
+<span class="cmt">// BFS — Level order</span>
+Queue&lt;TreeNode&gt; q = <span class="kw">new</span> LinkedList&lt;&gt;();
+q.offer(root);
+<span class="kw">while</span> (!q.isEmpty()) {
+    <span class="kw">int</span> size = q.size();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+        TreeNode node = q.poll();
+        <span class="kw">if</span> (node.left != <span class="kw">null</span>) q.offer(node.left);
+        <span class="kw">if</span> (node.right != <span class="kw">null</span>) q.offer(node.right);
+    }
+}</pre>
+          </div>
+          <div class="section">
+            <div class="section-title">Canonical Problems</div>
+            <div class="canonical-grid">
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/maximum-depth-of-binary-tree/" target="_blank">Maximum Depth of
+                  Binary Tree</a><span class="canonical-sub">post-order</span><span class="diff diff-e">Easy</span>
+              </div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/" target="_blank">Lowest
+                  Common Ancestor</a><span class="canonical-sub">post-order</span><span class="diff diff-m">Med</span>
+              </div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank">Level Order
+                  Traversal</a><span class="canonical-sub">BFS</span><span class="diff diff-m">Med</span></div>
+              <div class="canonical-row"><a class="canonical-name"
+                  href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank">Serialize
+                  and Deserialize</a><span class="canonical-sub">pre-order</span><span class="diff diff-h">Hard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </main>
+  </div>
+
+  <script>
+    function show(id) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.currentTarget.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function toggle(header) {
+      const sp = header.parentElement;
+      sp.classList.toggle('open');
+    }
+
+    document.querySelectorAll('.home-card').forEach(card => {
+      card.addEventListener('click', function () {
+        const onclick = this.getAttribute('onclick');
+        const id = onclick.match(/'([^']+)'/)[1];
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => {
+          if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(id)) n.classList.add('active');
+        });
+        window.scrollTo(0, 0);
+      });
+    });
+  </script>
+</body>
+
+</html>
