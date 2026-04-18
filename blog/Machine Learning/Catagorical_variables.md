@@ -66,23 +66,87 @@ When working with tabular data (like a CSV), there are three primary ways to han
 ### Strategy 1: Dropping (The Baseline)
 - **Action:** Simply delete all text columns.
 - **Verdict:** Fast and easy, but usually results in the **worst performance** because you are losing valuable information.
+- **Effect on MAE / Performance:** Because entire feature columns are discarded, the model has less information to learn from. MAE is typically the **highest** (worst) of all strategies. Think of it as the floor — the minimum your model can do. Use this only to establish a quick baseline, then beat it with encoding.
+
+```python
+# Drop all columns with object (text) dtype
+X_train_drop = X_train.select_dtypes(exclude=['object'])
+X_val_drop   = X_val.select_dtypes(exclude=['object'])
+```
 
 ### Strategy 2: Ordinal Encoding
 - **Action:** Assigns each unique value a different integer (0, 1, 2...).
-- **Best Use:** Best for **genuinely ranked data** where the order matters (e.g., `Small < Medium < Large`).
+- **Best Use:** Best for **genuinely ranked data** or ordinal data where the order matters (e.g., `Small < Medium < Large`).
 - **Risk (model-dependent):** The severity of applying this to nominal data depends on your algorithm:
-  - **Tree-based models** (Random Forest, XGBoost) can partially handle arbitrary integer labels because they split on thresholds (e.g., `City <= 1.5`), so the fake ordering does less damage.
+  - **Tree-based models** (Random Forest, XGBoost) can partially handle arbitrary integer labels because they split on thresholds (e.g., `City <= 1.5`), so the fake ordering does less damage. (or in simple ways: Tree-based models don't assume any ordering between categories because they split on thresholds, not by comparing values. or Can confuse the model if applied to nominal data (e.g., suggesting that "Chicago" is "greater than" "New York")).
   - **Linear models** (Linear Regression, Logistic Regression) will *literally compute* "Chicago = 2 × New York" and produce nonsense gradients. Never use ordinal encoding on nominal data with linear models.
+- **Effect on MAE / Performance:** A clear step up from Dropping — the model now has access to categorical information. With tree-based models on ordinal or even nominal data, MAE **drops noticeably** compared to the baseline. However, if used on nominal data with a linear model, predictions can actually get *worse* than dropping because the false ordering adds misleading signal.
+
+```python
+from sklearn.preprocessing import OrdinalEncoder
+
+# Identify categorical columns
+cat_cols = X_train.select_dtypes(include=['object']).columns.tolist()
+
+ordinal_enc = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+
+X_train_ord = X_train.copy()
+X_val_ord   = X_val.copy()
+
+# fit on train, transform both — never fit on val/test
+X_train_ord[cat_cols] = ordinal_enc.fit_transform(X_train[cat_cols])
+X_val_ord[cat_cols]   = ordinal_enc.transform(X_val[cat_cols])
+```
 
 ### Strategy 3: One-Hot Encoding
 - **Action:** Creates a new 0/1 binary column for every unique category.
 - **Best Use:** Best for **Nominal data** with a manageable number of unique values (e.g., Color: Red, Blue, Green).
 - **Cons — The High Cardinality Problem:** If a column has 1,000 unique cities, you create 1,000 new columns. This is known as the **curse of dimensionality** — your feature space explodes, training slows down, and models risk overfitting.
+- **Effect on MAE / Performance:** For nominal data with low cardinality, this typically produces the **best or near-best MAE** among classical encoding methods. The model sees true independence between categories (no fake ordering). With high-cardinality columns however, performance can degrade due to dimensionality blowup — and training time increases significantly.
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+
+cat_cols = X_train.select_dtypes(include=['object']).columns.tolist()
+num_cols = X_train.select_dtypes(exclude=['object']).columns.tolist()
+
+oh_enc = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
+
+# Encode categorical columns
+oh_train = pd.DataFrame(oh_enc.fit_transform(X_train[cat_cols]),
+                        columns=oh_enc.get_feature_names_out(cat_cols))
+oh_val   = pd.DataFrame(oh_enc.transform(X_val[cat_cols]),
+                        columns=oh_enc.get_feature_names_out(cat_cols))
+
+# Merge back with numeric columns
+X_train_oh = pd.concat([X_train[num_cols].reset_index(drop=True), oh_train], axis=1)
+X_val_oh   = pd.concat([X_val[num_cols].reset_index(drop=True),   oh_val],   axis=1)
+```
 
 ### Strategy 4: Target Encoding
 - **Action:** Replaces each category with the **mean target value** for that group (e.g., replace `City = "Chicago"` with the average house price for Chicago).
 - **Best Use:** The go-to for **high-cardinality** columns (zip codes, user IDs, product SKUs) where One-Hot would explode dimensionality.
 - **Risk:** Can cause **data leakage** if not done properly — always apply it inside cross-validation folds, not on the full dataset.
+- **Effect on MAE / Performance:** When done correctly (inside CV folds), Target Encoding often gives the **lowest MAE** on high-cardinality features. It directly encodes the relationship between a category and the target, so the model gets a highly informative signal without any dimensionality cost. When done incorrectly (leakage), it will look artificially great on training data but fail badly on validation/test.
+
+```python
+from sklearn.preprocessing import TargetEncoder
+
+cat_cols = X_train.select_dtypes(include=['object']).columns.tolist()
+
+target_enc = TargetEncoder()
+
+X_train_te = X_train.copy()
+X_val_te   = X_val.copy()
+
+# fit_transform on train (uses y_train), transform val without y
+X_train_te[cat_cols] = target_enc.fit_transform(X_train[cat_cols], y_train)
+X_val_te[cat_cols]   = target_enc.transform(X_val[cat_cols])
+```
+
+> [!WARNING]
+> `TargetEncoder` is available in **scikit-learn ≥ 1.3**. For older versions, use the `category_encoders` library: `pip install category_encoders`.
 
 > [!NOTE]
 > **Footnote — Binary / Hash Encoding:** Sits between Ordinal and One-Hot. It converts the integer ordinal ID into its binary representation (e.g., category `5` → `[1, 0, 1]`). Useful for medium-high cardinality where you want a compact representation without the blowup of One-Hot.

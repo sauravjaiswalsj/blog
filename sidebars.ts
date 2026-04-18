@@ -103,10 +103,21 @@ const sidebars: SidebarsConfig = {
       "collapsible": true,
       "collapsed": false,
       "items": [
+        {
+          "type": "category",
+          "label": "ML DCS",
+          "collapsible": true,
+          "collapsed": true,
+          "items": [
+            "ML/ML-DCS/lec-1-QnA"
+          ]
+        },
+        "ML/Amazon-Design-ML",
         "ML/Learning",
         "ML/LossFunction",
         "ML/ML-Algo",
-        "ML/ML"
+        "ML/ML",
+        "ML/notes1"
       ]
     },
     {
