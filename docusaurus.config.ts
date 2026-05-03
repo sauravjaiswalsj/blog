@@ -141,7 +141,7 @@ const config: Config = {
       {
         id: 'projects-blog',
         routeBasePath: 'blog/projects',
-        path: './blog/log-server',
+        path: './blog/proj',
         blogTitle: 'Projects',
         blogDescription: 'Project write-ups and deep dives',
         blogSidebarTitle: 'Projects',

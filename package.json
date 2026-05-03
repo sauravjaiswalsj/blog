@@ -5,7 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "./scripts/tex-to-md.sh && npm run generate-sidebar && docusaurus build",
+    "build": "./scripts/tex-to-md.sh && npm run generate-sidebar && DOCUSAURUS_NO_PERSISTENT_CACHE=1 docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
