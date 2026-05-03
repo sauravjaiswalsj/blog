@@ -1,409 +1,595 @@
-# Pattern 1: Transactional Outbox
+# Transactional Outbox Pattern in Rivo
 
-I used the transactional outbox pattern in Rivo because of a small but important failure case.
+How and why I used the Outbox pattern to make email-driven workflows more reliable.
 
-What happens if the database write succeeds, but the side effect fails?
+## The Problem
 
-That question looks simple.
+Rivo has a few flows where one user action does two important things.
 
-But it is one of those questions that exposes whether a backend is only working in the happy path, or whether it can survive real production behavior.
+It changes application state.
 
-In Rivo, a user can register, request a verification code, reset a password, or complete email verification.
+And it triggers a side effect.
 
-Each of those actions updates the database.
+For example:
 
-Each of those actions also needs something else to happen after the database update.
+- a user signs up
+- a verification code is generated
+- the user record is saved
+- a verification email must be sent
 
-An email needs to be sent.
+At first, this looks like a normal backend flow.
 
-A verification code needs to reach the user.
+```text
+Request
+  -> Save user in database
+  -> Send verification email
+  -> Return response
+```
 
-A password reset message needs to be delivered.
+But there is a failure case hiding in the middle.
 
-A success notification may need to go out.
+What happens if the database write succeeds, but the email fails?
 
-At first, the flow can look straightforward.
+The user exists in the database.
 
-Save the user.
+The account is marked as unverified.
 
-Send the email.
-
-Return the response.
-
-But the problem is hidden between those steps.
-
-The database and the email provider are two different systems.
-
-They do not commit together.
-
-If the user is saved successfully but the email provider fails, the application has already changed state.
-
-The user now exists.
-
-The verification code may already be stored.
-
-The password reset code may already be active.
+The verification code may be stored.
 
 But the user never receives the email.
 
-The system has accepted the action, but lost the intent to continue the workflow.
+The system has changed state, but the next step in the workflow has been lost.
 
-That is the exact failure the outbox pattern protects against.
+That is the problem the Outbox pattern solves.
 
-## The Problem We Faced
+## Why This Matters
 
-In Rivo, authentication flows depend on email delivery.
+This is not only about email.
 
-When a user signs up, they cannot log in until they verify their account.
+The same problem appears whenever an application does a database write and then tries to notify another system.
 
-So registration is not just a database insert.
+Examples:
 
-It is a business workflow:
+- save an order, then publish `OrderCreated`
+- create a payment, then notify a ledger service
+- update inventory, then emit a stock event
+- register a user, then send a verification email
+- reset a password, then send a reset confirmation
 
-1. Validate the user details.
-2. Create or update the user record.
-3. Generate a verification code.
-4. Persist the code and expiry time.
-5. Send the verification email.
-6. Let the user continue only after verification.
+The core issue is that the database and the external system do not commit together.
 
-The dangerous part is step five.
+The database may succeed.
 
-Email is an external dependency.
+The broker, email provider, or downstream service may fail.
 
-External dependencies fail.
+The application may crash between the two operations.
 
-They timeout.
+So this flow is unsafe:
 
-They rate limit.
+```text
+BEGIN
+  Save business data
+COMMIT
 
-They return temporary errors.
+Send side effect
+```
 
-The network drops.
+The side effect is not durable.
 
-The application instance crashes after saving the user but before sending the email.
+It only exists as an in-memory intention inside the running process.
 
-If the code only saves the user and then immediately calls the email service, there is a gap.
+If the process dies, the intention dies with it.
 
-And in that gap, business intent can disappear.
+## Presenting The Outbox Pattern
 
-The database says the user must verify their account.
+The Outbox pattern changes the flow.
 
-But there is no durable record saying, "send this verification email."
+Instead of sending the side effect directly, the application first stores an event in an outbox collection.
 
-That means the system has moved forward, but the workflow has not.
+That event says what should happen next.
 
-This is worse than a simple failed request.
+In Rivo, the event may say:
 
-A failed request is visible.
+- `USER_REGISTERED`
+- `VERIFY_EMAIL_REQUESTED`
+- `VERIFY_EMAIL_SENT`
+- `PASSWORD_RESET_REQUESTED`
+- `PASSWORD_RESET_SUCCESS`
 
-A lost side effect is quiet.
+The important part is that the business write and the outbox write happen together.
 
-The user just waits for an email that never arrives.
+```text
+BEGIN
+  Save business data
+  Save outbox event
+COMMIT
+```
 
-The backend looks like it did its job because the user record exists.
+Now the system has durable business state and durable business intent.
 
-Logs might show an exception, but logs are not a workflow recovery mechanism.
+The side effect can happen later.
 
-That was the core problem.
+A background worker can pick up the event, process it, retry it, or mark it as failed.
 
-We needed a way to make the next step durable.
+The message is no longer lost just because the request process crashed at the wrong time.
 
-## What The Outbox Changes
+## The Shape Of The Outbox Event
 
-With the outbox pattern, Rivo does not treat email sending as part of the direct request path.
+In Rivo, outbox events are stored in MongoDB.
 
-Instead, the request writes two things:
+The model contains enough information for the worker to process the event without needing to reconstruct the original request.
 
-1. The business state.
-2. The intent for the side effect.
+```java
+public class OutboxEvent {
+    private String id;
 
-For example, when a user registers, Rivo saves the user and also creates an outbox event with type `USER_REGISTERED`.
+    private EventType eventType;
+    private String aggregateType;
+    private String aggregateId;
 
-That outbox event contains the important context:
+    private Map<String, Object> payload;
 
-- the aggregate type, such as `USER`
-- the aggregate id, such as the user id
-- the event type, such as `USER_REGISTERED`
-- the payload, such as email and verification code
-- the status, such as `PENDING`
-- the retry metadata, such as attempts and next attempt time
+    private OutboxStatus outboxStatus;
+    private int attempts;
+    private int maxAttempts;
 
-Now the system has a durable record of what should happen next.
+    private Date nextAttemptAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private Date processedAt;
 
-If the application crashes after saving the user, the outbox event is still there.
+    private String lastError;
+}
+```
 
-If the email provider is down, the outbox event is still there.
+The fields are simple, but each one has a job.
 
-If the first processing attempt fails, the event can be retried.
+`eventType` tells the worker what action to perform.
 
-The important part is this:
+`aggregateType` and `aggregateId` connect the event back to the domain object.
 
-The workflow intent is stored in the database before the side effect is attempted.
+`payload` carries the data needed for the side effect, such as email and verification code.
 
-That is the heart of the pattern.
+`outboxStatus` tracks where the event is in its lifecycle.
 
-## How Rivo Uses It
+`attempts`, `maxAttempts`, and `nextAttemptAt` make retries controlled instead of random.
 
-Rivo stores outbox events in MongoDB.
+`lastError` keeps failure visible.
 
-The event has a lifecycle:
+This matters because an outbox is not just a queue.
 
-`PENDING`
+It is also an operational record of what the system tried to do.
 
-The event exists and is ready to be processed.
+## Event Lifecycle
 
-`PROCESSING`
+Rivo uses four states.
 
-A worker has claimed the event and is currently handling it.
+```text
+PENDING
+  The event is ready to be processed.
 
-`PROCESSED`
+PROCESSING
+  A worker has claimed the event.
 
-The side effect completed successfully.
+PROCESSED
+  The side effect completed successfully.
 
-`FAILED`
+FAILED
+  The event was exhausted or deliberately retired.
+```
 
-The event could not be processed after the allowed number of retries, or it was deliberately retired because a newer event replaced it.
+The happy path looks like this:
+
+```text
+PENDING -> PROCESSING -> PROCESSED
+```
+
+The retry path looks like this:
+
+```text
+PENDING -> PROCESSING -> PENDING -> PROCESSING -> PROCESSED
+```
+
+The exhausted path looks like this:
+
+```text
+PENDING -> PROCESSING -> FAILED
+```
+
+This gives the system a clear answer to an important question:
+
+What happened to the side effect?
+
+Without an outbox, that answer often lives only in logs.
+
+With an outbox, it lives in data.
+
+## How Rivo Creates An Outbox Event
+
+During registration, Rivo creates the user first.
+
+Then it creates an outbox event for the verification email workflow.
+
+The simplified flow looks like this:
+
+```text
+validate user
+generate verification code
+save user
+create USER_REGISTERED outbox event
+return response
+```
+
+The outbox event contains the email address and verification code.
+
+```java
+private OutboxEvent generateOutboxEvent(User user, EventType eventType) {
+    OutboxEvent event = new OutboxEvent();
+    event.setEventType(eventType);
+    event.setAggregateType("USER");
+    event.setAggregateId(user.getId());
+    event.setOutboxStatus(OutboxStatus.PENDING);
+    event.setAttempts(0);
+    event.setMaxAttempts(5);
+    event.setNextAttemptAt(convertLocalDateTimeToDate());
+    event.setCreatedAt(convertLocalDateTimeToDate());
+    event.setUpdatedAt(convertLocalDateTimeToDate());
+
+    Map<String, Object> payload = new HashMap<>();
+    payload.put("username", user.getUsername());
+    payload.put("email", user.getEmail());
+
+    if (user.getVerificationCode() != null) {
+        payload.put("verificationCode", user.getVerificationCode());
+    }
+
+    event.setPayload(payload);
+    return event;
+}
+```
+
+The key decision is this:
+
+Rivo stores the intent before attempting the side effect.
+
+That means the system can always come back later and continue the workflow.
+
+## The Message Relay
+
+Putting an event in the outbox does not send the email by itself.
+
+Something still has to process it.
+
+That component is usually called a relay, dispatcher, poller, or worker.
+
+In Rivo, it is `OutboxPoller`.
 
 The worker runs on a schedule.
 
-It looks for pending events whose `nextAttemptAt` time has arrived.
+It looks for events that are:
 
-It claims one event at a time by moving it from `PENDING` to `PROCESSING`.
+- `PENDING`
+- due for processing based on `nextAttemptAt`
+- oldest first based on `createdAt`
 
-That claim step matters.
+Then it claims an event.
 
-If multiple application instances are running, they should not all process the same event at the same time.
+Claiming matters because multiple workers may be running at the same time.
 
-In Rivo, the poller uses an atomic find-and-modify operation through MongoDB.
+If two workers pick the same event, the side effect may happen twice.
 
-That gives the worker a safer way to say:
+Rivo uses MongoDB `findAndModify` to atomically move one event from `PENDING` to `PROCESSING`.
 
-"Give me the next available event, and mark it as mine."
+Conceptually, it does this:
 
-After the event is claimed, the worker checks its type.
+```text
+Find the oldest pending event
+Mark it as processing
+Return it to this worker
+```
 
-If the event is `USER_REGISTERED`, it sends the welcome email and verification email.
+That makes the claim operation atomic.
 
-If the event is `PASSWORD_RESET_REQUESTED`, it sends the password reset email.
+Only one worker gets that specific event.
 
-If the event is `PASSWORD_RESET_SUCCESS`, it sends the reset success email.
+## Processing The Event
 
-If the event is `VERIFY_EMAIL_REQUESTED`, it sends the verification email again.
+Once the worker claims an event, it reads the event type and executes the matching side effect.
 
-If the event is `VERIFY_EMAIL_SENT`, it sends the verification success email.
+```text
+USER_REGISTERED
+  -> send welcome email
+  -> send verification email
 
-When the side effect succeeds, the event becomes `PROCESSED`.
+PASSWORD_RESET_REQUESTED
+  -> send password reset email
 
-When the side effect fails, the attempt count increases.
+PASSWORD_RESET_SUCCESS
+  -> send password reset success email
 
-If attempts are still available, the event goes back to `PENDING` with a future `nextAttemptAt`.
+VERIFY_EMAIL_REQUESTED
+  -> send verification email
 
-The retry delay increases over time:
+VERIFY_EMAIL_SENT
+  -> send verification success email
+```
 
-- 1 minute
-- 5 minutes
-- 15 minutes
-- 1 hour
+If processing succeeds, the worker marks the event as `PROCESSED`.
 
-If the event reaches the maximum number of attempts, it becomes `FAILED`.
+If processing fails, the worker increments the attempt count and stores the error.
 
-That means the system does not keep retrying forever.
+If attempts remain, the event goes back to `PENDING` with a later `nextAttemptAt`.
 
-It preserves the failed event for inspection.
+If attempts are exhausted, the event becomes `FAILED`.
 
-That is important too.
+That is the difference between a lost side effect and a recoverable side effect.
 
-Failure should not vanish just because retries were exhausted.
+The system can see what failed.
 
-## Why Not Just Send The Email Directly?
+The system can retry.
 
-Direct email sending is simpler.
+The system can stop after a defined limit.
 
-For small projects, it can be enough.
+## Retry Strategy
 
-But it creates an uncomfortable reliability problem once the side effect matters to the business flow.
+Retries are useful, but retrying immediately can make an outage worse.
 
-Consider signup.
+If the email provider is down, hammering it every millisecond will not help.
 
-If user creation succeeds and email sending fails, what should the API return?
+Rivo uses a simple backoff strategy:
 
-If it returns success, the user is stuck waiting for an email.
+```text
+attempt 1 -> retry after 1 minute
+attempt 2 -> retry after 5 minutes
+attempt 3 -> retry after 15 minutes
+later attempts -> retry after 1 hour
+```
 
-If it returns failure, the database may already contain the user.
+This gives temporary failures time to recover.
 
-If the client retries, the app may now see the username or email as already taken.
+It also prevents the worker from creating unnecessary pressure on the failing dependency.
 
-If the app tries to manually compensate, the code becomes fragile.
+After the maximum number of attempts, the event is marked as `FAILED`.
 
-This is how a simple two-step flow becomes messy.
+That failed event is still valuable.
 
-The root issue is that one operation is durable and the other is not.
+It can be inspected.
 
-The database write is persisted.
+It can be logged.
 
-The email intent is only in memory unless we store it somewhere.
+It can become the basis for an admin retry tool later.
 
-The outbox makes that intent durable.
+Failure is not hidden.
 
-## The Pattern Is Not Mainly About Async
+## Why At-Least-Once Delivery Matters
 
-This distinction matters.
+The Outbox pattern usually gives at-least-once delivery.
 
-A lot of people explain the outbox pattern as a way to make work asynchronous.
+That means the side effect should happen one or more times.
 
-That can be true as a side effect.
+It should not be silently lost.
 
-But that is not the main reason I used it in Rivo.
+But duplicates are possible.
 
-I used it because I did not want to lose business intent when the process crashes between two operations.
+Here is the classic failure case:
 
-Async is an implementation detail.
+```text
+Worker claims event
+Worker sends email successfully
+Application crashes before marking event as PROCESSED
+Worker starts again
+Event is retried
+Email may be sent again
+```
 
-Durability is the real point.
+This is why outbox-based systems should assume handlers may run more than once.
 
-The outbox says:
+For some workflows, a duplicate is annoying but acceptable.
 
-"If the system accepted this state change, it must also remember what needs to happen next."
+For example, sending two verification emails is not ideal, but it is usually better than sending none.
 
-That is a different mindset.
+For other workflows, such as payments, duplicate processing can be dangerous.
 
-It turns a fragile in-memory follow-up into a recoverable workflow.
+Those workflows need stronger idempotency controls.
 
-## What This Solved
+The Outbox pattern does not magically give exactly-once behavior.
 
-The outbox gave Rivo a cleaner reliability boundary.
+It gives a practical reliability model:
 
-The API request is responsible for validating input and persisting state.
+At-least-once delivery plus idempotent processing.
 
-The worker is responsible for delivering side effects.
+## The Problem Of Stale Events
 
-The database becomes the handoff point between them.
-
-That means the API no longer depends on the email provider being healthy at the exact moment the user signs up.
-
-If email sending is temporarily unavailable, the event remains pending.
-
-If the app restarts, the event remains pending.
-
-If processing fails once, the worker retries later.
-
-If processing fails repeatedly, the event becomes failed instead of disappearing.
-
-That changed the failure mode.
-
-Before the outbox, a failed side effect could become a lost side effect.
-
-After the outbox, a failed side effect becomes a visible pending or failed event.
-
-That is a much better problem to have.
-
-Visible failure can be retried, monitored, alerted on, or manually inspected.
-
-Invisible failure usually becomes a confused user and a debugging session later.
-
-## One Practical Issue: Stale Verification Codes
-
-There was one extra problem in Rivo.
+Rivo had one practical issue that is easy to miss.
 
 Verification codes can change.
 
-A user may sign up, wait, and then request another verification email.
+A user might register, wait, and then request another verification code.
 
-Or they may repeat signup while the account is still pending.
+Or they might repeat the signup flow while the account is still pending.
 
-If old outbox events are still pending, they might send an older verification code after a newer one has been generated.
+That creates a subtle risk.
 
-That would be a bad user experience.
+An old outbox event may still contain an old verification code.
 
-The user receives a code.
+If the worker later sends that stale event, the user receives a code that no longer works.
 
-They enter it.
+That is bad UX.
 
-The backend rejects it because a newer code is actually active.
+The user did what the email told them to do, but the backend rejects the code.
 
-So Rivo also retires stale pending events in specific flows.
+So Rivo retires stale pending events in the pending signup refresh flow.
 
-When a pending signup is refreshed, older pending `USER_REGISTERED` events for that user are marked as `FAILED` with a reason like superseded by newer verification code.
+Older `USER_REGISTERED` events for the same user are marked as `FAILED`.
 
-That keeps the outbox aligned with the current business state.
+The reason is stored as:
 
-This is an important lesson:
+```text
+Superseded by newer verification code
+```
 
-The outbox makes intent durable, but the intent still has to be correct.
+This is an important lesson.
 
-For event types where newer events replace older ones, the system needs rules for retiring stale work.
+The Outbox pattern makes intent durable.
+
+But durable intent still has to represent the current business truth.
+
+If newer events replace older events, the application needs rules for retiring stale work.
+
+## Why Not Just Use A Queue Directly?
+
+A queue or broker is useful.
+
+But directly publishing to a broker after a database commit still leaves the same gap.
+
+```text
+Save user in database
+Publish event to broker
+```
+
+If the database save succeeds and the publish fails, the event is lost.
+
+If the publish succeeds but the database transaction later fails, consumers may hear about a change that never committed.
+
+The Outbox pattern avoids that by making the database the source of truth for both:
+
+- the state change
+- the intent to publish or send the side effect
+
+The relay can publish later.
+
+That small change removes a dangerous timing dependency from the request path.
+
+## Why Not Make The Whole Thing Synchronous?
+
+Synchronous side effects are easier to understand.
+
+They also make the user wait for external systems.
+
+If the email provider is slow, signup becomes slow.
+
+If the email provider is down, signup may fail even though the user data could be safely stored.
+
+That couples the request path to the health of a dependency that does not need to be part of the immediate response.
+
+The Outbox pattern creates a boundary.
+
+The API accepts and persists the business operation.
+
+The worker handles the side effect.
+
+The database connects the two.
+
+This is not only about making the system asynchronous.
+
+It is about making the handoff durable.
 
 ## Tradeoffs
 
-The outbox pattern is useful, but it is not free.
+The Outbox pattern is powerful, but it is not free.
 
-It adds another collection or table.
+It adds storage.
+
+Outbox records need indexes, cleanup, and possibly archival.
 
 It adds a worker.
 
-It adds statuses.
+The worker needs scheduling, concurrency control, logs, and retry behavior.
 
-It adds retry logic.
+It adds latency.
 
-It adds operational questions.
+Events are processed in the background, so delivery is not immediate.
 
-How often should the worker poll?
+It adds duplicate risk.
 
-How many events should it process at once?
+At-least-once processing means handlers must be safe to retry.
 
-How many retries are enough?
+It adds operational responsibility.
 
-What should happen to failed events?
+Failed events need to be visible.
 
-Which failures are temporary?
+Retries need limits.
 
-Which failures should stop immediately?
+Metrics and alerts become important once the system is production-facing.
 
-It also introduces at-least-once behavior.
+The pattern is worth it when the side effect matters.
 
-That means a side effect may happen more than once in some failure scenarios.
+If losing the side effect would break a user flow, create inconsistent state, or require manual repair, the outbox is usually a good tradeoff.
 
-For example, the worker could send an email successfully but crash before marking the event as processed.
+## Common Pitfalls
 
-When it restarts, it may retry the event.
+### Treating Logs As Recovery
 
-So consumers and side effects should be designed with idempotency in mind where possible.
+Logs can tell you something failed.
 
-For email, duplicate sends are not ideal, but they are usually less dangerous than losing a critical verification or reset email.
+They cannot reliably continue the workflow.
 
-For payments or financial transfers, the idempotency requirements would be much stricter.
+An outbox event can.
 
-The pattern improves reliability, but it does not remove the need to think carefully.
+### Retrying Forever
 
-It moves failure into a place where the system can see it and handle it.
+Infinite retries can hide poison events and overload dependencies.
+
+Use attempt counts, backoff, and terminal failure states.
+
+### Forgetting Idempotency
+
+The worker can process the same event more than once in rare failure scenarios.
+
+Design consumers and side effects with that in mind.
+
+### Letting The Table Grow Forever
+
+Processed and failed events should eventually be archived or purged based on business and audit needs.
+
+An outbox is operational data.
+
+It needs lifecycle management.
+
+### Ignoring Stale Business Intent
+
+Some events become invalid when newer state replaces them.
+
+Verification codes are a good example.
+
+If the code changes, old email events may need to be retired.
 
 ## The Main Lesson
 
-The transactional outbox is not just an architecture diagram pattern.
+The Outbox pattern is not about adding architecture for the sake of architecture.
 
-It solves a very real gap in application code.
+It solves a specific reliability gap.
 
 The gap between:
 
-"The database update succeeded."
+```text
+The database changed.
+```
 
 And:
 
-"The rest of the workflow definitely happened."
+```text
+The rest of the system was told about it.
+```
 
-In Rivo, that gap showed up in user registration, verification emails, and password reset flows.
+In Rivo, that gap appeared in authentication workflows.
 
-The database could save the correct state, while the side effect could still fail.
+User registration, verification emails, password reset emails, and success notifications all depended on side effects happening after database changes.
 
-The outbox gave the system a durable memory of what needed to happen next.
+Without an outbox, those side effects could be lost if the process crashed or the email provider failed at the wrong moment.
 
-That is the reason I used it.
+With an outbox, the system remembers what needs to happen next.
 
-Not because async sounds cleaner.
+The worker can process it later.
 
-Not because patterns are impressive.
+It can retry.
 
-Because a backend should not forget business intent just because an external dependency failed at the wrong time.
+It can fail visibly.
 
 That distinction matters.
+
+The goal was not simply to make the flow asynchronous.
+
+The goal was to avoid losing business intent.
+
+That is why I used the Transactional Outbox pattern in Rivo.
