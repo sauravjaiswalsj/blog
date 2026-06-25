@@ -212,7 +212,8 @@ const sidebars: SidebarsConfig = {
               "collapsed": true,
               "items": [
                 "Warwick/HPC/Coursework1/Assignment1",
-                "Warwick/HPC/Coursework1/background"
+                "Warwick/HPC/Coursework1/background",
+                "Warwick/HPC/Coursework1/Writing"
               ]
             },
             "Warwick/HPC/Into",
