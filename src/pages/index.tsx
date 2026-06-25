@@ -62,6 +62,9 @@ export default function Home(): ReactNode {
             <Link className={styles.ctaGhost} to="https://sauravjaiswalsj.vercel.app/">
               Portfolio ↗
             </Link>
+            <Link className={styles.ctaGhost} to="/tracker">
+              Tracker ↗
+            </Link>
           </div>
         </div>
       </header>
