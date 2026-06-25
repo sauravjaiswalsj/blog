@@ -192,6 +192,7 @@ const config: Config = {
           label: 'Notes',
         },
         { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/tracker', label: 'Tracker', position: 'left' },
         {
           type: 'dropdown',
           label: 'Categories',
